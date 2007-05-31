@@ -1,5 +1,5 @@
 %define version 1.4.4
-%define release %mkrel 1
+%define release %mkrel 2
 
 %define _requires_exceptions perl(Carp::Heavy)
 
