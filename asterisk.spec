@@ -81,7 +81,6 @@ BuildRequires:	libilbc-devel
 BuildRequires:	libnbs-devel
 BuildRequires:	libncurses-devel
 BuildRequires:	libpri-devel >= 1.4.0
-BuildRequires:	libspandsp-devel
 BuildRequires:	libspeex-devel
 BuildRequires:	libtermcap-devel
 BuildRequires:	libtiff-devel
@@ -92,6 +91,7 @@ BuildRequires:	libidn-devel
 BuildRequires:	oggvorbis-devel
 BuildRequires:	openssl-devel
 BuildRequires:	postgresql-devel
+BuildRequires:	spandsp-devel
 BuildRequires:	sqlite-devel
 BuildRequires:	bison
 BuildRequires:	flex
