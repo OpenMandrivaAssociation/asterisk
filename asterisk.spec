@@ -1,6 +1,3 @@
-%define version 1.4.8
-%define release %mkrel 1
-
 %define _requires_exceptions perl(Carp::Heavy)
 
 %define build_h323	0
@@ -35,8 +32,8 @@
 
 Summary:	Asterisk PBX
 Name:		asterisk
-Version:	%{version}
-Release:	%{release}
+Version:	1.4.8
+Release:	%mkrel 2
 License:	GPL
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -45,18 +42,7 @@ Source1:	asterisk.init
 Source2:	asterisk.sysconfig
 Source3:	http://www.asteriskdocs.org/modules/tinycontent/content/docbook/current/AsteriskDocs-html.tar.bz2
 Patch0:		asterisk-1.4.0-mdv.diff
-#Patch1:		asterisk-1.2.4-spandsp.diff
-#Patch2:		asterisk-1.2.0-beta1-antibork_1.diff
-#Patch3:		asterisk-1.2.5-antibork_2.diff
 Patch4:		asterisk-1.4.0-beta3-freetds_mssql.diff
-#Patch5:		asterisk-1.0.8-20050420-freetds-0.63.diff
-#Patch8:		asterisk-1.0.8-20050420-h323_conf_fix.diff
-# taken from the visdn-devel-20060315 tar ball
-#Patch11:	asterisk-1.2.5-cap.diff
-#Patch12:	asterisk-1.2-answer.diff
-#Patch13:	asterisk-1.2-disconnect.diff
-#Patch14:	asterisk-1.2.7.1-ppcfix.diff
-#Patch15:	asterisk-1.2.7.1-metermaid.diff
 Patch16:	asterisk-1.4.0-beta3-external_liblpc10_and_libilbc.diff
 Patch17:	asterisk-1.4.0-beta3-no_mega_optimization.diff
 Patch18:	asterisk-1.4.0-beta2-imap.diff
@@ -73,7 +59,6 @@ BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
 BuildRequires:	libalsa-devel
 BuildRequires:	libcurl-devel
-#BuildRequires:	gtk+1.2-devel
 BuildRequires:	isdn4k-utils-devel
 BuildRequires:	libgsm-devel
 BuildRequires:	libiksemel-devel
@@ -310,22 +295,11 @@ for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type 
 done
 
 %patch0 -p1 -b .mdv
-#patch1 -p1 -b .spandsp
-#patch2 -p1 -b .antibork_1
-#patch3 -p0 -b .antibork_2
+
 %if %build_tds
 %patch4 -p1 -b .freetds_mssql
 %endif
-#patch5 -p0 -b .freetds-0.63
-#patch8 -p0 -b .h323_conf_fix
-# visdn
-#%patch11 -p1 -b .cap
-#patch12 -p1 -b .answer
-#patch13 -p1 -b .disconnect
-%ifnarch %ix86
-#patch14 -p1 -b .ppcfix
-%endif
-#patch15 -p0 -b .metermaid
+
 %patch16 -p0 -b .external_liblpc10_and_libilbc
 %patch17 -p0 -b .no_mega_optimization
 %patch18 -p0 -b .imap
@@ -349,12 +323,14 @@ pushd docs-html
 popd
 
 %build
+%serverbuild
+
 rm -f configure
 sh ./bootstrap.sh
 
 echo "%{version}-%{release}" > .version
 
-export ASTCFLAGS="%{optflags}"
+export ASTCFLAGS="$CFLAGS"
 
 %configure2_5x \
     --without-kde \
@@ -483,6 +459,7 @@ rm -rf %{buildroot}%{_localstatedir}/asterisk/sounds
 %_pre_useradd asterisk %{_localstatedir}/asterisk /bin/sh
 
 %post
+%create_ghostfile %{_localstatedir}/asterisk/astdb asterisk asterisk 644
 %create_ghostfile /var/log/asterisk/console asterisk asterisk 644
 %create_ghostfile /var/log/asterisk/debug asterisk asterisk 644
 %create_ghostfile /var/log/asterisk/messages asterisk asterisk 644
@@ -741,5 +718,3 @@ fi
 %attr(-,root,root)		%dir			/var/www/html/_asterisk
 %attr(0644,root,root)					/var/www/html/_asterisk/animlogo.gif
 %attr(0644,root,root)					/var/www/html/_asterisk/play.gif
-
-
