@@ -316,11 +316,15 @@ cat %{SOURCE2} > asterisk.sysconfig
 # lib64 fix
 find -name "Makefile" | xargs perl -pi -e "s|/usr/lib|%{_libdir}|g"
 perl -pi -e "s|/lib\b|/%{_lib}|g" configure*
+perl -pi -e "s|/lib/|/%{_lib}/|g" configure*
 
 # fix one convenient softlink
 pushd docs-html
     ln -s book1.html index.html
 popd
+
+# temporary hack
+cp %{_includedir}/spandsp/plc.h include/asterisk/
 
 %build
 %serverbuild
