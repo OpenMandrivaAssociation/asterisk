@@ -32,7 +32,7 @@
 
 Summary:	Asterisk PBX
 Name:		asterisk
-Version:	1.4.9
+Version:	1.4.10
 Release:	%mkrel 1
 License:	GPL
 Group:		System/Servers
