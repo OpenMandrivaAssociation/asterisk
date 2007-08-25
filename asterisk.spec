@@ -240,6 +240,7 @@ Summary:	Brief SNMP Agent / SubAgent support for Asterisk
 Group:		System/Servers
 Requires:	net-snmp
 BuildRequires:	libnet-snmp-devel
+BuildRequires:	perl-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	openssl-devel
 Requires(post): %{name} = %{version}
