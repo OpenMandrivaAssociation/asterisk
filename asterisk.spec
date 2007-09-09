@@ -21,7 +21,7 @@
 %{?_with_tds:		%global build_tds 1}
 
 # SIP over TCP / TLS support: http://bugs.digium.com/view.php?id=4903
-%define build_tcp	0
+%define build_tcp	1
 %{?_without_tcp:	%global build_tcp 0}
 %{?_with_tcp:		%global build_tcp 1}
 
@@ -33,7 +33,7 @@
 Summary:	Asterisk PBX
 Name:		asterisk
 Version:	1.4.11
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPL
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -47,7 +47,8 @@ Patch16:	asterisk-1.4.0-beta3-external_liblpc10_and_libilbc.diff
 Patch17:	asterisk-1.4.0-beta3-no_mega_optimization.diff
 Patch18:	asterisk-1.4.0-beta2-imap.diff
 Patch19:	asterisk-1.4-app_fax.diff
-Patch100:	asterisk-20061212-tcp.patch
+Patch20:	asterisk-chan_sip-content-length.diff
+Patch100:	sip-20070808-1.4.9.tcp
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -305,6 +306,7 @@ done
 %patch17 -p0 -b .no_mega_optimization
 %patch18 -p0 -b .imap
 %patch19 -p0 -b .app_fax
+%patch20 -p0 -b .content_length
 
 %if %{build_tcp}
 # SIP over TCP
