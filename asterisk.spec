@@ -21,7 +21,7 @@
 %{?_with_tds:		%global build_tds 1}
 
 # SIP over TCP / TLS support: http://bugs.digium.com/view.php?id=4903
-%define build_tcp	1
+%define build_tcp	0
 %{?_without_tcp:	%global build_tcp 0}
 %{?_with_tcp:		%global build_tcp 1}
 
@@ -32,7 +32,7 @@
 
 Summary:	Asterisk PBX
 Name:		asterisk
-Version:	1.4.13
+Version:	1.4.15
 Release:	%mkrel 1
 License:	GPL
 Group:		System/Servers
