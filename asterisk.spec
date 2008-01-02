@@ -100,6 +100,7 @@ BuildRequires:	oggvorbis-devel
 BuildRequires:	libpopt-devel
 #BuildRequires:	swig-devel
 BuildRequires:	wget
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 Asterisk is an Open Source PBX and telephony development platform that
