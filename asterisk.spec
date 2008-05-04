@@ -48,6 +48,7 @@ Patch17:	asterisk-1.4.0-beta3-no_mega_optimization.diff
 Patch18:	asterisk-imap.diff
 Patch19:	asterisk-1.4-app_fax.diff
 Patch20:	asterisk-chan_sip-content-length.diff
+Patch21:	asterisk-autoconf262.diff
 Patch100:	sip-20070808-1.4.9.tcp
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
@@ -307,6 +308,7 @@ done
 %patch18 -p0 -b .imap
 %patch19 -p0 -b .app_fax
 %patch20 -p0 -b .content_length
+%patch21 -p0
 
 %if %{build_tcp}
 # SIP over TCP
@@ -318,8 +320,8 @@ cat %{SOURCE2} > asterisk.sysconfig
 
 # lib64 fix
 find -name "Makefile" | xargs perl -pi -e "s|/usr/lib|%{_libdir}|g"
-perl -pi -e "s|/lib\b|/%{_lib}|g" configure*
-perl -pi -e "s|/lib/|/%{_lib}/|g" configure*
+perl -pi -e "s|/lib\b|/%{_lib}|g" configure* acinclude.m4
+perl -pi -e "s|/lib/|/%{_lib}/|g" configure* acinclude.m4
 
 # fix one convenient softlink
 pushd docs-html
