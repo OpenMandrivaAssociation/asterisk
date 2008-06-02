@@ -417,7 +417,7 @@ touch %{name}-devel.filelist
 %endif
 
 # fix ghost files
-touch %{buildroot}%{_localstatedir}/asterisk/astdb
+touch %{buildroot}%{_localstatedir}/lib/asterisk/astdb
 touch %{buildroot}/var/log/asterisk/console
 touch %{buildroot}/var/log/asterisk/debug
 touch %{buildroot}/var/log/asterisk/messages
@@ -432,16 +432,16 @@ perl -pi -e "s|^libdir=.*|libdir=%{_libdir}|g" %{buildroot}%{_libdir}/pkgconfig/
 perl -pi -e "s|^varrundir=.*|varrundir=/var/run/asterisk|g" %{buildroot}%{_libdir}/pkgconfig/asterisk.pc
 
 # Remove unpackages files
-rm -rf %{buildroot}%{_localstatedir}/asterisk/moh/.asterisk-moh-freeplay-wav
+rm -rf %{buildroot}%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-freeplay-wav
 
 # use the stand alone asterisk-core-sounds package instead
-rm -rf %{buildroot}%{_localstatedir}/asterisk/sounds
+rm -rf %{buildroot}%{_localstatedir}/lib/asterisk/sounds
 
 %pre
-%_pre_useradd asterisk %{_localstatedir}/asterisk /bin/sh
+%_pre_useradd asterisk %{_localstatedir}/lib/asterisk /bin/sh
 
 %post
-%create_ghostfile %{_localstatedir}/asterisk/astdb asterisk asterisk 640
+%create_ghostfile %{_localstatedir}/lib/asterisk/astdb asterisk asterisk 640
 %create_ghostfile /var/log/asterisk/console asterisk asterisk 640
 %create_ghostfile /var/log/asterisk/debug asterisk asterisk 640
 %create_ghostfile /var/log/asterisk/messages asterisk asterisk 640
@@ -500,21 +500,21 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_*.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_*.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_*.so
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/agi-bin
-%attr(0755,root,root) %{_localstatedir}/asterisk/agi-bin/*
-%ghost %{_localstatedir}/asterisk/astdb
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/firmware
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/firmware/iax
-%attr(0755,root,root) %{_localstatedir}/asterisk/firmware/iax/*.bin
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/images
-%attr(0644,root,root) %{_localstatedir}/asterisk/images/*.jpg
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/keys
-%attr(0644,root,root) %{_localstatedir}/asterisk/keys/*.pub
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/moh
-%attr(0644,root,root) %{_localstatedir}/asterisk/moh/*.wav
-%doc %{_localstatedir}/asterisk/moh/LICENSE-asterisk-moh-freeplay-wav
-%attr(0755,root,root) %dir %{_localstatedir}/asterisk/static-http
-%attr(0644,root,root) %{_localstatedir}/asterisk/static-http/*
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/agi-bin
+%attr(0755,root,root) %{_localstatedir}/lib/asterisk/agi-bin/*
+%ghost %{_localstatedir}/lib/asterisk/astdb
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/firmware
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/firmware/iax
+%attr(0755,root,root) %{_localstatedir}/lib/asterisk/firmware/iax/*.bin
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/images
+%attr(0644,root,root) %{_localstatedir}/lib/asterisk/images/*.jpg
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/keys
+%attr(0644,root,root) %{_localstatedir}/lib/asterisk/keys/*.pub
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/moh
+%attr(0644,root,root) %{_localstatedir}/lib/asterisk/moh/*.wav
+%doc %{_localstatedir}/lib/asterisk/moh/LICENSE-asterisk-moh-freeplay-wav
+%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/static-http
+%attr(0644,root,root) %{_localstatedir}/lib/asterisk/static-http/*
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk/cdr-csv
 %attr(644,asterisk,asterisk) %ghost /var/log/asterisk/cdr-csv/Master.csv
