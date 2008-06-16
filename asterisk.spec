@@ -28,7 +28,7 @@
 Summary:	Asterisk PBX
 Name:		asterisk
 Version:	1.4.19.2
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPL
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -36,7 +36,7 @@ Source0:	http://www.asterisk.org/html/downloads/%{name}-%{version}.tar.gz
 Source1:	asterisk.init
 Source2:	asterisk.sysconfig
 Patch0:		asterisk-mdv.diff
-Patch4:		asterisk-freetds_mssql.diff
+Patch4:		asterisk-freetds.diff
 Patch16:	asterisk-external_liblpc10_and_libilbc.diff
 Patch17:	asterisk-1.4.0-beta3-no_mega_optimization.diff
 Patch18:	asterisk-imap.diff
@@ -205,7 +205,7 @@ Summary:	FreeTDS plugins for Asterisk
 Group:		System/Servers
 Requires(post): %{name} = %{version}
 Requires(preun): %{name} = %{version}
-BuildRequires:	freetds_mssql-devel >= 0.64
+BuildRequires:	freetds-devel >= 0.64
 
 %description	plugins-tds
 This package contains FreeTDS plugins for Asterisk:
@@ -286,7 +286,7 @@ done
 %patch0 -p1 -b .mdv
 
 %if %build_tds
-%patch4 -p1 -b .freetds_mssql
+%patch4 -p1 -b .freetds
 %endif
 
 %patch16 -p1 -b .external_liblpc10_and_libilbc
@@ -354,9 +354,6 @@ export ASTCFLAGS="$CFLAGS"
     --with-sqlite=%{_prefix} \
     --with-suppserv=%{_prefix} \
     --with-ssl=%{_prefix} \
-%if %{build_tds}
-    --with-tds_mssql=%{_prefix} \
-%endif
     --with-termcap=%{_prefix} \
     --with-tonezone=%{_prefix} \
     --with-vorbis=%{_prefix} \
