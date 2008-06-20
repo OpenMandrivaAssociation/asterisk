@@ -27,8 +27,8 @@
 
 Summary:	Asterisk PBX
 Name:		asterisk
-Version:	1.4.19.2
-Release:	%mkrel 2
+Version:	1.4.21
+Release:	%mkrel 1
 License:	GPL
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -286,7 +286,7 @@ done
 %patch0 -p1 -b .mdv
 
 %if %build_tds
-%patch4 -p1 -b .freetds
+%patch4 -p0 -b .freetds
 %endif
 
 %patch16 -p1 -b .external_liblpc10_and_libilbc
@@ -318,6 +318,7 @@ echo "%{version}-%{release}" > .version
 export ASTCFLAGS="$CFLAGS"
 
 %configure2_5x \
+    --localstatedir=/var/lib \
     --without-kde \
     --without-qt \
     --without-tinfo \
@@ -414,7 +415,7 @@ touch %{name}-devel.filelist
 %endif
 
 # fix ghost files
-touch %{buildroot}%{_localstatedir}/lib/asterisk/astdb
+touch %{buildroot}/var/lib/asterisk/astdb
 touch %{buildroot}/var/log/asterisk/console
 touch %{buildroot}/var/log/asterisk/debug
 touch %{buildroot}/var/log/asterisk/messages
@@ -429,16 +430,16 @@ perl -pi -e "s|^libdir=.*|libdir=%{_libdir}|g" %{buildroot}%{_libdir}/pkgconfig/
 perl -pi -e "s|^varrundir=.*|varrundir=/var/run/asterisk|g" %{buildroot}%{_libdir}/pkgconfig/asterisk.pc
 
 # Remove unpackages files
-rm -rf %{buildroot}%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-freeplay-wav
+rm -rf %{buildroot}/var/lib/asterisk/moh/.asterisk-moh-freeplay-wav
 
 # use the stand alone asterisk-core-sounds package instead
-rm -rf %{buildroot}%{_localstatedir}/lib/asterisk/sounds
+rm -rf %{buildroot}/var/lib/asterisk/sounds
 
 %pre
-%_pre_useradd asterisk %{_localstatedir}/lib/asterisk /bin/sh
+%_pre_useradd asterisk /var/lib/asterisk /bin/sh
 
 %post
-%create_ghostfile %{_localstatedir}/lib/asterisk/astdb asterisk asterisk 640
+%create_ghostfile /var/lib/asterisk/astdb asterisk asterisk 640
 %create_ghostfile /var/log/asterisk/console asterisk asterisk 640
 %create_ghostfile /var/log/asterisk/debug asterisk asterisk 640
 %create_ghostfile /var/log/asterisk/messages asterisk asterisk 640
@@ -497,21 +498,21 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_*.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_*.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_*.so
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/agi-bin
-%attr(0755,root,root) %{_localstatedir}/lib/asterisk/agi-bin/*
-%ghost %{_localstatedir}/lib/asterisk/astdb
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/firmware
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/firmware/iax
-%attr(0755,root,root) %{_localstatedir}/lib/asterisk/firmware/iax/*.bin
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/images
-%attr(0644,root,root) %{_localstatedir}/lib/asterisk/images/*.jpg
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/keys
-%attr(0644,root,root) %{_localstatedir}/lib/asterisk/keys/*.pub
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/moh
-%attr(0644,root,root) %{_localstatedir}/lib/asterisk/moh/*.wav
-%doc %{_localstatedir}/lib/asterisk/moh/LICENSE-asterisk-moh-freeplay-wav
-%attr(0755,root,root) %dir %{_localstatedir}/lib/asterisk/static-http
-%attr(0644,root,root) %{_localstatedir}/lib/asterisk/static-http/*
+%attr(0755,root,root) %dir /var/lib/asterisk/agi-bin
+%attr(0755,root,root) /var/lib/asterisk/agi-bin/*
+%ghost /var/lib/asterisk/astdb
+%attr(0755,root,root) %dir /var/lib/asterisk/firmware
+%attr(0755,root,root) %dir /var/lib/asterisk/firmware/iax
+%attr(0755,root,root) /var/lib/asterisk/firmware/iax/*.bin
+%attr(0755,root,root) %dir /var/lib/asterisk/images
+%attr(0644,root,root) /var/lib/asterisk/images/*.jpg
+%attr(0755,root,root) %dir /var/lib/asterisk/keys
+%attr(0644,root,root) /var/lib/asterisk/keys/*.pub
+%attr(0755,root,root) %dir /var/lib/asterisk/moh
+%attr(0644,root,root) /var/lib/asterisk/moh/*.wav
+%doc /var/lib/asterisk/moh/LICENSE-asterisk-moh-freeplay-wav
+%attr(0755,root,root) %dir /var/lib/asterisk/static-http
+%attr(0644,root,root) /var/lib/asterisk/static-http/*
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk/cdr-csv
 %attr(644,asterisk,asterisk) %ghost /var/log/asterisk/cdr-csv/Master.csv
