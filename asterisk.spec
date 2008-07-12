@@ -75,7 +75,7 @@ BuildRequires:	spandsp-devel
 BuildRequires:	sqlite-devel
 BuildRequires:	bison
 BuildRequires:	flex
-BuildRequires:	imap-devel
+BuildRequires:	c-client-devel
 BuildRequires:	krb5-devel
 BuildRequires:	pam-devel
 %if %{build_misdn}
