@@ -39,7 +39,6 @@ Patch0:		asterisk-mdv.diff
 Patch4:		asterisk-freetds.diff
 Patch16:	asterisk-external_liblpc10_and_libilbc.diff
 Patch17:	asterisk-1.4.0-beta3-no_mega_optimization.diff
-Patch18:	asterisk-imap.diff
 Patch19:	asterisk-1.4-app_fax.diff
 Patch20:	asterisk-chan_sip-content-length.diff
 Patch21:	asterisk-autoconf262.diff
@@ -291,7 +290,6 @@ done
 
 %patch16 -p1 -b .external_liblpc10_and_libilbc
 %patch17 -p0 -b .no_mega_optimization
-%patch18 -p0 -b .imap
 %patch19 -p0 -b .app_fax
 %patch20 -p0 -b .content_length
 %patch21 -p0
@@ -327,7 +325,7 @@ export ASTCFLAGS="$CFLAGS"
 %if !%{build_h323}
     --without-h323 \
 %endif
-    --with-imap=%{_prefix} \
+    --with-imap \
     --with-asound=%{_prefix} \
     --with-curses=%{_prefix} \
     --with-gnutls=%{_prefix} \
