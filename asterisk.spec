@@ -28,7 +28,7 @@
 Summary:	Asterisk PBX
 Name:		asterisk
 Version:	1.4.21.2
-Release:	%mkrel 3
+Release:	%mkrel 4
 License:	GPL
 Group:		System/Servers
 URL:		http://www.asterisk.org/
