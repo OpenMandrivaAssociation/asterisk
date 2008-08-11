@@ -335,7 +335,11 @@ export ASTCFLAGS="$CFLAGS"
 %if !%{build_h323}
     --without-h323 \
 %endif
+%if %mdkversion < 200900
+    --with-imap=%{_prefix} \
+%else
     --with-imap \
+%endif
     --with-asound=%{_prefix} \
     --with-curses=%{_prefix} \
     --with-gnutls=%{_prefix} \
