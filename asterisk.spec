@@ -111,7 +111,7 @@ BuildRequires:	resample-devel
 BuildRequires:	SDL_image-devel
 BuildRequires:	spandsp-devel
 BuildRequires:	speex-devel
-BuildRequires:	sqlite-devel
+BuildRequires:	sqlite3-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	termcap-devel
 BuildRequires:	tiff-devel
