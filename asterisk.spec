@@ -8,7 +8,7 @@
 %{?_without_misdn:	%global build_misdn 0}
 %{?_with_misdn:		%global build_misdn 1}
 
-%define build_odbc	1
+%define build_odbc	0
 %{?_without_odbc:	%global build_odbc 0}
 %{?_with_odbc:		%global build_odbc 1}
 
@@ -25,16 +25,16 @@
 %{?_without_docs:	%global build_docs 0}
 %{?_with_docs:		%global build_docs 1}
 
-%define beta 3
+%define beta 1
 
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.6.1
-Release:	%mkrel 0.0.%{?beta:beta%{beta}}.1
+Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
-Source0:	asterisk-%{version}%{?beta:-beta%{beta}}.tar.gz
+Source0:	asterisk-%{version}%{?beta:-rc%{beta}}.tar.gz
 Source1:	asterisk-logrotate
 Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
@@ -115,7 +115,9 @@ BuildRequires:	sqlite3-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	termcap-devel
 BuildRequires:	tiff-devel
+%if %{build_odbc}
 BuildRequires:	unixODBC-devel
+%endif
 BuildRequires:	wget
 BuildRequires:	zlib-devel
 %if %mdkversion < 200900
@@ -414,6 +416,7 @@ Provides:	asterisk-plugins-voicemail-implementation = %{version}-%{release}
 Voicemail implementation for Asterisk that stores voicemail on an IMAP
 server.
 
+%if %{build_odbc}
 %package	plugins-voicemail-odbc
 Summary:	Store voicemail in a database using ODBC
 Group:		System/Servers
@@ -424,6 +427,7 @@ Provides:	asterisk-plugins-voicemail-implementation = %{version}-%{release}
 %description	plugins-voicemail-odbc
 Voicemail implementation for Asterisk that uses ODBC to store
 voicemail in a database.
+%endif
 
 %package	plugins-voicemail-plain
 Summary:	Store voicemail on the local filesystem
@@ -590,12 +594,14 @@ rm apps/app_voicemail.o apps/app_directory.o
 mv apps/app_voicemail.so apps/app_voicemail_imap.so
 mv apps/app_directory.so apps/app_directory_imap.so
 
+%if %{build_odbc}
 %{__sed} -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=ODBC_STORAGE/' menuselect.makeopts
 ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk NOISY_BUILD=1
 
 rm apps/app_voicemail.o apps/app_directory.o
 mv apps/app_voicemail.so apps/app_voicemail_odbc.so
 mv apps/app_directory.so apps/app_directory_odbc.so
+%endif
 
 # so that these modules don't get built again during the install phase
 touch apps/app_voicemail.o apps/app_directory.o
@@ -624,8 +630,10 @@ rm %{buildroot}%{_libdir}/asterisk/modules/app_directory.so
 rm %{buildroot}%{_libdir}/asterisk/modules/app_voicemail.so
 install -D -p -m 0755 apps/app_directory_imap.so %{buildroot}%{_libdir}/asterisk/modules/
 install -D -p -m 0755 apps/app_voicemail_imap.so %{buildroot}%{_libdir}/asterisk/modules/
+%if %{build_odbc}
 install -D -p -m 0755 apps/app_directory_odbc.so %{buildroot}%{_libdir}/asterisk/modules/
 install -D -p -m 0755 apps/app_voicemail_odbc.so %{buildroot}%{_libdir}/asterisk/modules/
+%endif
 install -D -p -m 0755 apps/app_directory_plain.so %{buildroot}%{_libdir}/asterisk/modules/
 install -D -p -m 0755 apps/app_voicemail_plain.so %{buildroot}%{_libdir}/asterisk/modules/
 
@@ -1058,6 +1066,7 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/mobile.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_mobile.so
 
+%if %{build_odbc}
 %files plugins-odbc
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_adaptive_odbc.conf
@@ -1069,6 +1078,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_odbc.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_config_odbc.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_odbc.so
+%endif
 
 %files plugins-oss
 %defattr(-,root,root,-)
@@ -1148,11 +1158,13 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_directory_imap.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_voicemail_imap.so
 
+%if %{build_odbc}
 %files plugins-voicemail-odbc
 %defattr(-,root,root,-)
 %doc doc/voicemail_odbc_postgresql.txt
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_directory_odbc.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_voicemail_odbc.so
+%endif
 
 %files plugins-voicemail-plain
 %defattr(-,root,root,-)
