@@ -40,15 +40,14 @@ Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
 Patch1:		0001-Modify-init-scripts-for-better-Fedora-compatibility.patch
 Patch2:		0002-Modify-modules.conf-so-that-different-voicemail-modu.patch
-Patch3:		0003-Add-chan_mobile-from-asterisk-addons.patch
 Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
 Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
 Patch6:		0006-Build-using-external-libedit.diff
-Patch50:	asterisk-1.6.1-beta3-linkage_fix.diff
-Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
-Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
+#Patch50:	asterisk-1.6.1-beta3-linkage_fix.diff
+#Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
+#Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
-Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
+#Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -275,15 +274,6 @@ Requires:	asterisk = %{version}-%{release}
 %description	plugins-minivm
 MiniVM application for Asterisk.
 
-%package	plugins-mobile
-Summary:	Asterisk channel driver for bluetooth phones and headsets
-Group:		System/Servers
-Requires:	asterisk = %{version}-%{release}
-
-%description	plugins-mobile
-Asterisk channel driver to allow Bluetooth cell/mobile phones to be
-used as FXO devices, and headsets as FXS devices.
-
 %if %{build_odbc}
 %package	plugins-odbc
 Summary:	Applications for Asterisk that use ODBC (except voicemail)
@@ -442,7 +432,7 @@ local filesystem.
 
 %prep
 
-%setup0 -q -n asterisk-%{version}%{?beta:-beta%{beta}}
+%setup0 -q -n asterisk-%{version}%{?beta:-rc%{beta}}
 
 find . -type d -perm 0700 -exec chmod 755 {} \;
 find . -type d -perm 0555 -exec chmod 755 {} \;
@@ -455,16 +445,15 @@ done
 
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
 
-%patch50 -p0
-%patch51 -p0
-%patch52 -p1
+#%patch50 -p0
+#%patch51 -p0
+#%patch52 -p1
 %patch53 -p0
-%patch54 -p0
+#%patch54 -p0
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -1059,12 +1048,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/misdn.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_misdn.so
-
-%files plugins-mobile
-%defattr(-,root,root,-)
-%doc doc/chan_mobile.txt
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/mobile.conf
-%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_mobile.so
 
 %if %{build_odbc}
 %files plugins-odbc
