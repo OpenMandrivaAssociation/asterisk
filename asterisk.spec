@@ -4,7 +4,7 @@
 %{?_without_h323:	%global build_h323 0}
 %{?_with_h323:		%global build_h323 1}
 
-%define build_misdn	1
+%define build_misdn	0
 %{?_without_misdn:	%global build_misdn 0}
 %{?_with_misdn:		%global build_misdn 1}
 
@@ -43,11 +43,13 @@ Patch2:		0002-Modify-modules.conf-so-that-different-voicemail-modu.patch
 Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
 Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
 Patch6:		0006-Build-using-external-libedit.diff
-#Patch50:	asterisk-1.6.1-beta3-linkage_fix.diff
-#Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
-#Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
+Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
+Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
+Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
+Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
+Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -67,7 +69,6 @@ BuildRequires:	freetds-devel >= 0.64
 BuildRequires:	gmime-devel
 BuildRequires:	gsm-devel
 BuildRequires:	gtk2-devel
-BuildRequires:	isdn4k-utils-devel
 BuildRequires:	jackit-devel
 BuildRequires:	krb5-devel
 BuildRequires:	libcap-devel
@@ -76,6 +77,7 @@ BuildRequires:	libgcrypt-devel
 BuildRequires:	libgnutls-devel
 BuildRequires:	libgpg-error-devel
 BuildRequires:	libgsm-devel
+BuildRequires:	libhoard
 BuildRequires:	libidn-devel
 BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
@@ -93,7 +95,10 @@ BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
 BuildRequires:	lpc10-devel
 BuildRequires:	lua-devel
+%if %{build_misdn}
+BuildRequires:	isdn4k-utils-devel
 BuildRequires:	misdn-devel >= 1:3.4
+%endif
 BuildRequires:	ncurses-devel
 BuildRequires:	net-snmp-devel
 BuildRequires:	newt-devel
@@ -128,9 +133,6 @@ BuildRequires:	c-client-devel
 BuildRequires:	ooh323c-devel
 BuildRequires:	openh323-devel >= 1.15.3
 BuildRequires:	pwlib-devel
-%endif
-%if %{build_misdn}
-BuildRequires:	misdn-devel >= 1:3.4
 %endif
 %if %{build_docs}
 BuildRequires:	doxygen
@@ -447,13 +449,15 @@ done
 %patch2 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
-
-#%patch50 -p0
-#%patch51 -p0
-#%patch52 -p1
+#%patch6 -p1
+#
+%patch50 -p1
+%patch51 -p0
+%patch52 -p1
 %patch53 -p0
-#%patch54 -p0
+##%patch54 -p0
+%patch55 -p2
+%patch56 -p0
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -504,27 +508,34 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %configure \
     --localstatedir=/var \
     --with-asound=%{_prefix} \
-    --with-bluetooth=%{_prefix} \
-    --with-curl=%{_prefix} \
+    --with-execinfo=%{_prefix} \
     --with-cap=%{_prefix} \
+    --with-curl=%{_prefix} \
     --with-curses=%{_prefix} \
     --with-crypto=%{_prefix} \
     --with-dahdi=%{_prefix} \
     --with-avcodec=%{_prefix} \
     --with-gsm=%{_prefix} \
-    --with-gtk2=%{_prefix} \
+    --without-gtk \
+    --with-gtk2=%{_/prefix} \
     --with-gmime=%{_prefix} \
+    --with-hoard=%{_prefix} \
     --with-iconv=%{_prefix} \
     --with-iksemel=%{_prefix} \
     --with-imap=system \
-    --with-isdnnet=%{_prefix} \
     --with-jack=%{_prefix} \
     --with-ldap=%{_prefix} \
     --with-libedit=%{_prefix} \
     --with-ltdl=%{_prefix} \
     --with-lua=%{_prefix} \
 %if %{build_misdn}
+    --with-isdnnet=%{_prefix} \
     --with-misdn=%{_prefix} \
+    --with-suppserv=%{_prefix} \
+%else
+    --without-isdnnet \
+    --without-misdn \
+    --without-suppserv \
 %endif
     --with-nbs=%{_prefix} \
     --with-ncurses=%{_prefix} \
@@ -532,6 +543,8 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
     --with-newt=%{_prefix} \
 %if %{build_odbc}
     --with-odbc=%{_prefix} \
+%else
+    --without-odbc \
 %endif
     --with-ogg=%{_prefix} \
     --with-osptk=%{_prefix} \
@@ -545,6 +558,9 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %if %{build_h323}
     --with-pwlib=%{_prefix} \
     --with-h323=%{_prefix} \
+%else
+    --without-pwlib \
+    --without-h323 \
 %endif
     --with-radius=%{_prefix} \
     --with-sdl=%{_prefix} \
@@ -553,7 +569,6 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
     --with-speexdsp=%{_prefix} \
     --without-sqlite \
     --with-sqlite3=%{_prefix} \
-    --with-suppserv=%{_prefix} \
     --with-ssl=%{_prefix} \
     --with-tds=%{_prefix} \
     --with-termcap=%{_prefix} \
@@ -663,6 +678,19 @@ touch %{buildroot}/var/log/asterisk/event_log
 touch %{buildroot}/var/log/asterisk/cdr-csv/Master.csv
 touch %{buildroot}/var/log/asterisk/h323_log
 
+# remove unused files
+%if %{build_odbc}
+%else
+  rm -f %{buildroot}/%{_sysconfdir}/asterisk/cdr_adaptive_odbc.conf
+  rm -f %{buildroot}/%{_sysconfdir}/asterisk/cdr_odbc.conf
+  rm -f %{buildroot}/%{_sysconfdir}/asterisk/func_odbc.conf
+  rm -f %{buildroot}/%{_sysconfdir}/asterisk/res_odbc.conf
+%endif
+%if %{build_misdn}
+%else
+  rm -f %{buildroot}/%{_sysconfdir}/asterisk/misdn.conf
+%endif
+
 %pre
 %_pre_useradd asterisk /var/lib/asterisk /bin/sh
 
@@ -693,8 +721,10 @@ fi
 %pre plugins-dahdi
 %{_sbindir}/usermod -a -G dahdi asterisk
 
+%if %{build_misdn}
 %pre plugins-misdn
 %{_sbindir}/usermod -a -G misdn asterisk
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -856,6 +886,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_wav_gsm.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_wav.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_vox.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/func_audiohookinherit.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_base64.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_blacklist.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_callerid.so
@@ -912,12 +943,14 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_pthread.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_dlinklists.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_skel.so
+%attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
 %attr(0755,root,root) %{_sbindir}/asterisk
 %attr(0755,root,root) %{_sbindir}/astgenkey
 %attr(0755,root,root) %{_sbindir}/astman
 %attr(0755,root,root) %{_sbindir}/autosupport
 %attr(0755,root,root) %{_sbindir}/check_expr
+%attr(0755,root,root) %{_sbindir}/conf2ael
 %attr(0755,root,root) %{_sbindir}/muted
 %attr(0755,root,root) %{_sbindir}/rasterisk
 %attr(0755,root,root) %{_sbindir}/refcounter
@@ -1044,10 +1077,12 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/minivm.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_minivm.so
 
+%if %{build_misdn}
 %files plugins-misdn
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/misdn.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_misdn.so
+%endif
 
 %if %{build_odbc}
 %files plugins-odbc
