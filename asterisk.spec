@@ -30,7 +30,7 @@
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.6.1
-Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
+Release:	%mkrel 0.0.%{?beta:rc%{beta}}.2
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -50,6 +50,7 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
 Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
+Patch57:	editline-include-missing-1.6.1-fix.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -77,7 +78,7 @@ BuildRequires:	libgcrypt-devel
 BuildRequires:	libgnutls-devel
 BuildRequires:	libgpg-error-devel
 BuildRequires:	libgsm-devel
-BuildRequires:	libhoard
+BuildRequires:	%mklibname hoard
 BuildRequires:	libidn-devel
 BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
@@ -458,6 +459,7 @@ done
 ##%patch54 -p0
 %patch55 -p2
 %patch56 -p0
+%patch57 -p0
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
