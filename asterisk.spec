@@ -587,14 +587,14 @@ GMIME_INCLUDE=`gmime-config --cflags`
 perl -pi -e "s|^AIS_INCLUDE=.*|AIS_INCLUDE=-I/usr/include/openais|g" makeopts
 perl -pi -e "s|^GMIME_INCLUDE=.*|GMIME_INCLUDE=$GMIME_INCLUDE|g" makeopts
 
-ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk NOISY_BUILD=1
+ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
 
 rm apps/app_voicemail.o apps/app_directory.o
 mv apps/app_voicemail.so apps/app_voicemail_plain.so
 mv apps/app_directory.so apps/app_directory_plain.so
 
 %{__sed} -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=IMAP_STORAGE/' menuselect.makeopts
-ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk NOISY_BUILD=1
+ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
 
 rm apps/app_voicemail.o apps/app_directory.o
 mv apps/app_voicemail.so apps/app_voicemail_imap.so
@@ -602,7 +602,7 @@ mv apps/app_directory.so apps/app_directory_imap.so
 
 %if %{build_odbc}
 %{__sed} -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=ODBC_STORAGE/' menuselect.makeopts
-ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk NOISY_BUILD=1
+ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
 
 rm apps/app_voicemail.o apps/app_directory.o
 mv apps/app_voicemail.so apps/app_voicemail_odbc.so
@@ -614,7 +614,7 @@ touch apps/app_voicemail.o apps/app_directory.o
 touch apps/app_voicemail.so apps/app_directory.so
 
 %if %{build_docs}
-ASTCFLAGS="%{optflags}" make progdocs DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk NOISY_BUILD=1
+ASTCFLAGS="%{optflags}" make progdocs DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
 
 # fix dates so that we don't get multilib conflicts
 find doc/api/html -type f -print0 | xargs --null touch -r ChangeLog
@@ -623,14 +623,14 @@ find doc/api/html -type f -print0 | xargs --null touch -r ChangeLog
 %install
 rm -rf %{buildroot}
 
-ASTCFLAGS="%{optflags}" make install DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk
-ASTCFLAGS="%{optflags}" make samples DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk ASTDATADIR=%{_datadir}/asterisk
+ASTCFLAGS="%{optflags}" make install DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
+ASTCFLAGS="%{optflags}" make samples DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
 
 install -D -p -m 0755 contrib/init.d/rc.redhat.asterisk %{buildroot}%{_initrddir}/asterisk
 install -D -p -m 0644 contrib/sysconfig/asterisk %{buildroot}%{_sysconfdir}/sysconfig/asterisk
 install -D -p -m 0644 %{S:1} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
-install -D -p -m 0644 doc/asterisk-mib.txt %{buildroot}%{_datadir}/snmp/mibs/ASTERISK-MIB.txt
-install -D -p -m 0644 doc/digium-mib.txt %{buildroot}%{_datadir}/snmp/mibs/DIGIUM-MIB.txt
+install -D -p -m 0644 doc/asterisk-mib.txt %{buildroot}/var/lib/snmp/mibs/ASTERISK-MIB.txt
+install -D -p -m 0644 doc/digium-mib.txt %{buildroot}/var/lib/snmp/mibs/DIGIUM-MIB.txt
 
 rm %{buildroot}%{_libdir}/asterisk/modules/app_directory.so
 rm %{buildroot}%{_libdir}/asterisk/modules/app_voicemail.so
@@ -644,21 +644,21 @@ install -D -p -m 0755 apps/app_directory_plain.so %{buildroot}%{_libdir}/asteris
 install -D -p -m 0755 apps/app_voicemail_plain.so %{buildroot}%{_libdir}/asterisk/modules/
 
 # create some directories that need to be packaged
-mkdir -p %{buildroot}%{_datadir}/asterisk/moh
-mkdir -p %{buildroot}%{_datadir}/asterisk/sounds
+mkdir -p %{buildroot}/var/lib/asterisk/moh
+mkdir -p %{buildroot}/var/lib/asterisk/sounds
 mkdir -p %{buildroot}/var/lib/asterisk
 mkdir -p %{buildroot}/var/log/asterisk/cdr-custom
 mkdir -p %{buildroot}/var/spool/asterisk/monitor
 mkdir -p %{buildroot}/var/spool/asterisk/outgoing
 
 # We're not going to package any of the sample AGI scripts
-rm -f %{buildroot}%{_datadir}/asterisk/agi-bin/*
+rm -f %{buildroot}/var/lib/asterisk/agi-bin/*
 
 # Don't package the sample voicemail user
 rm -rf %{buildroot}/var/spool/asterisk/voicemail/default
 
 # Don't package example phone provision configs
-rm -rf %{buildroot}%{_datadir}/asterisk/phoneprov/*
+rm -rf %{buildroot}/var/lib/asterisk/phoneprov/*
 
 # these are compiled with -O0 and thus include unfortified code.
 rm -rf %{buildroot}%{_sbindir}/hashtest
@@ -964,15 +964,14 @@ rm -rf %{buildroot}
 %{_mandir}/man8/astgenkey.8*
 %{_mandir}/man8/autosupport.8*
 %{_mandir}/man8/safe_asterisk.8*
-%attr(0750,asterisk,asterisk) %dir %{_datadir}/asterisk
-%attr(0750,asterisk,asterisk) %dir %{_datadir}/asterisk/agi-bin
-%attr(0750,asterisk,asterisk) %{_datadir}/asterisk/images
-%attr(0750,asterisk,asterisk) %{_datadir}/asterisk/keys
-%attr(0750,asterisk,asterisk) %{_datadir}/asterisk/phoneprov
-%attr(0750,asterisk,asterisk) %{_datadir}/asterisk/static-http
-%attr(0750,asterisk,asterisk) %dir %{_datadir}/asterisk/moh
-%attr(0750,asterisk,asterisk) %dir %{_datadir}/asterisk/sounds
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk
+%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/agi-bin
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/images
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/static-http
+%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/moh
+%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/sounds
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk/cdr-csv
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk/cdr-custom
@@ -1000,7 +999,7 @@ rm -rf %{buildroot}
 
 %files firmware
 %defattr(-,root,root,-)
-%attr(0750,asterisk,asterisk) %{_datadir}/asterisk/firmware
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/firmware
 
 %files plugins-ais
 %defattr(-,root,root,-)
@@ -1138,8 +1137,8 @@ rm -rf %{buildroot}
 %doc doc/digium-mib.txt
 %doc doc/snmp.txt
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_snmp.conf
-%attr(0644,root,root) %{_datadir}/snmp/mibs/ASTERISK-MIB.txt
-%attr(0644,root,root) %{_datadir}/snmp/mibs/DIGIUM-MIB.txt
+%attr(0644,root,root) /var/lib/snmp/mibs/ASTERISK-MIB.txt
+%attr(0644,root,root) /var/lib/snmp/mibs/DIGIUM-MIB.txt
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_snmp.so
 
 %files plugins-sqlite
