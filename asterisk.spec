@@ -25,12 +25,12 @@
 %{?_without_docs:	%global build_docs 0}
 %{?_with_docs:		%global build_docs 1}
 
-%define beta 1
+%define beta 2
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	1.6.1
-Release:	%mkrel 0.0.%{?beta:rc%{beta}}.2
+Version:	1.6.1.0
+Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -48,7 +48,6 @@ Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
-Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 Requires(pre): rpm-helper
@@ -457,7 +456,6 @@ done
 %patch52 -p1
 %patch53 -p0
 ##%patch54 -p0
-%patch55 -p2
 %patch56 -p0
 %patch57 -p0
 
@@ -856,7 +854,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_custom.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_manager.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_agent.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_features.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_iax2.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_local.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_mgcp.so
@@ -944,6 +941,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_speech.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_pthread.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_dlinklists.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/test_heap.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_skel.so
 %attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
@@ -951,7 +949,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_sbindir}/astgenkey
 %attr(0755,root,root) %{_sbindir}/astman
 %attr(0755,root,root) %{_sbindir}/autosupport
-%attr(0755,root,root) %{_sbindir}/check_expr
 %attr(0755,root,root) %{_sbindir}/conf2ael
 %attr(0755,root,root) %{_sbindir}/muted
 %attr(0755,root,root) %{_sbindir}/rasterisk
