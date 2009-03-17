@@ -4,6 +4,7 @@
 %{?_without_h323:	%global build_h323 0}
 %{?_with_h323:		%global build_h323 1}
 
+# not compatible >=kernel-2.6.25 Using instead asterisk-chan_lcr
 %define build_misdn	0
 %{?_without_misdn:	%global build_misdn 0}
 %{?_with_misdn:		%global build_misdn 1}
@@ -30,7 +31,7 @@
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.6.1.0
-Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
+Release:	%mkrel 0.0.%{?beta:rc%{beta}}.2
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -48,8 +49,9 @@ Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
-Patch56:	strlcpy-strlcat-1.6.1-fix.diff
-Patch57:	editline-include-missing-1.6.1-fix.diff
+#Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
+#Patch56:	strlcpy-strlcat-1.6.1-fix.diff
+#Patch57:	editline-include-missing-1.6.1-fix.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -68,6 +70,7 @@ BuildRequires:	flex
 BuildRequires:	freetds-devel >= 0.64
 BuildRequires:	gmime-devel
 BuildRequires:	gsm-devel
+BuildRequires:	gtk-devel
 BuildRequires:	gtk2-devel
 BuildRequires:	jackit-devel
 BuildRequires:	krb5-devel
@@ -456,8 +459,9 @@ done
 %patch52 -p1
 %patch53 -p0
 ##%patch54 -p0
-%patch56 -p0
-%patch57 -p0
+#%patch55 -p2
+#%patch56 -p0
+#%patch57 -p0
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -516,7 +520,7 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
     --with-dahdi=%{_prefix} \
     --with-avcodec=%{_prefix} \
     --with-gsm=%{_prefix} \
-    --without-gtk \
+    --with-gtk=%{_/prefix} \
     --with-gtk2=%{_/prefix} \
     --with-gmime=%{_prefix} \
     --with-hoard=%{_prefix} \
@@ -854,6 +858,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_custom.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_manager.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_agent.so
+#%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_features.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_iax2.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_local.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_mgcp.so
@@ -921,6 +926,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_ael.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_config.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_dundi.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_gtkconsole.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_loopback.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_realtime.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_spool.so
@@ -949,6 +955,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_sbindir}/astgenkey
 %attr(0755,root,root) %{_sbindir}/astman
 %attr(0755,root,root) %{_sbindir}/autosupport
+#%attr(0755,root,root) %{_sbindir}/check_expr
 %attr(0755,root,root) %{_sbindir}/conf2ael
 %attr(0755,root,root) %{_sbindir}/muted
 %attr(0755,root,root) %{_sbindir}/rasterisk
