@@ -26,12 +26,12 @@
 %{?_without_docs:	%global build_docs 0}
 %{?_with_docs:		%global build_docs 1}
 
-%define beta 2
+%define beta 3
 
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.6.1.0
-Release:	%mkrel 0.0.%{?beta:rc%{beta}}.2
+Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -452,7 +452,7 @@ done
 %patch2 -p1
 %patch4 -p1
 %patch5 -p1
-#%patch6 -p1
+%patch6 -p1
 #
 %patch50 -p1
 %patch51 -p0
