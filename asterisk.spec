@@ -31,7 +31,7 @@
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.6.1.0
-Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
+Release:	%mkrel 0.0.%{?beta:rc%{beta}}.2
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -57,7 +57,7 @@ Requires(postun): rpm-helper
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Requires:	mpg123
-Requires:	asterisk-core-sounds
+Requires:	asterisk-core-sounds, asterisk-moh-freeplay
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
