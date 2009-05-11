@@ -26,16 +26,16 @@
 %{?_without_docs:	%global build_docs 0}
 %{?_with_docs:		%global build_docs 1}
 
-%define beta 4
+#define beta 4
 
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.6.1.0
-Release:	%mkrel 0.0.%{?beta:rc%{beta}}.1
+Release:	%mkrel 1
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
-Source0:	asterisk-%{version}%{?beta:-rc%{beta}}.tar.gz
+Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{name}-%{version}%{?beta:-rc%{beta}}.tar.gz
 Source1:	asterisk-logrotate
 Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
@@ -68,7 +68,7 @@ BuildRequires:	dahdi-devel >= 2.0.0
 BuildRequires:	ffmpeg-devel
 BuildRequires:	flex
 BuildRequires:	freetds-devel >= 0.64
-BuildRequires:	gmime-devel
+BuildRequires:	libgmime2.2-devel
 BuildRequires:	gsm-devel
 BuildRequires:	gtk-devel
 BuildRequires:	gtk2-devel
@@ -445,7 +445,7 @@ find . -type f -perm 0555 -exec chmod 755 {} \;
 find . -type f -perm 0444 -exec chmod 644 {} \;
 		
 for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type f -name .#\*`; do
-    if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
+	if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
 done
 
 %patch1 -p1
@@ -495,94 +495,94 @@ perl -pi -e "s|/lib/|/%{_lib}/|g" configure*  autoconf/*.m4
 rm -f autoconf/ast_prog_sed.m4
 sh ./bootstrap.sh
 
-pushd menuselect/mxml
-%configure
-popd
+#pushd menuselect/mxml
+#%configure
+#popd
 
-pushd menuselect
-%configure
-popd 
+#pushd menuselect
+#%configure
+#popd 
 
-pushd main/editline
-%configure
-popd
+#pushd main/editline
+#%configure
+#popd
 
 export CFLAGS="%{optflags} `gmime-config --cflags`"
 
+#	--with-gtk=%{_prefix} \
 %configure \
-    --localstatedir=/var \
-    --with-asound=%{_prefix} \
-    --with-execinfo=%{_prefix} \
-    --with-cap=%{_prefix} \
-    --with-curl=%{_prefix} \
-    --with-curses=%{_prefix} \
-    --with-crypto=%{_prefix} \
-    --with-dahdi=%{_prefix} \
-    --with-avcodec=%{_prefix} \
-    --with-gsm=%{_prefix} \
-    --with-gtk=%{_/prefix} \
-    --with-gtk2=%{_/prefix} \
-    --with-gmime=%{_prefix} \
-    --with-hoard=%{_prefix} \
-    --with-iconv=%{_prefix} \
-    --with-iksemel=%{_prefix} \
-    --with-imap=system \
-    --with-jack=%{_prefix} \
-    --with-ldap=%{_prefix} \
-    --with-libedit=%{_prefix} \
-    --with-ltdl=%{_prefix} \
-    --with-lua=%{_prefix} \
+	--localstatedir=/var \
+	--with-asound=%{_prefix} \
+	--with-execinfo=%{_prefix} \
+	--with-cap=%{_prefix} \
+	--with-curl=%{_prefix} \
+	--with-curses=%{_prefix} \
+	--with-crypto=%{_prefix} \
+	--with-dahdi=%{_prefix} \
+	--with-avcodec=%{_prefix} \
+	--with-gsm=%{_prefix} \
+	--with-gtk2=%{_prefix} \
+	--with-gmime=%{_prefix} \
+	--with-hoard=%{_prefix} \
+	--with-iconv=%{_prefix} \
+	--with-iksemel=%{_prefix} \
+	--with-imap=system \
+	--with-jack=%{_prefix} \
+	--with-ldap=%{_prefix} \
+	--with-libedit=%{_prefix} \
+	--with-ltdl=%{_prefix} \
+	--with-lua=%{_prefix} \
 %if %{build_misdn}
-    --with-isdnnet=%{_prefix} \
-    --with-misdn=%{_prefix} \
-    --with-suppserv=%{_prefix} \
+	--with-isdnnet=%{_prefix} \
+	--with-misdn=%{_prefix} \
+	--with-suppserv=%{_prefix} \
 %else
-    --without-isdnnet \
-    --without-misdn \
-    --without-suppserv \
+	--without-isdnnet \
+	--without-misdn \
+	--without-suppserv \
 %endif
-    --with-nbs=%{_prefix} \
-    --with-ncurses=%{_prefix} \
-    --with-netsnmp=%{_prefix} \
-    --with-newt=%{_prefix} \
+	--with-nbs=%{_prefix} \
+	--with-ncurses=%{_prefix} \
+	--with-netsnmp=%{_prefix} \
+	--with-newt=%{_prefix} \
 %if %{build_odbc}
-    --with-odbc=%{_prefix} \
+	--with-odbc=%{_prefix} \
 %else
-    --without-odbc \
+	--without-odbc \
 %endif
-    --with-ogg=%{_prefix} \
-    --with-osptk=%{_prefix} \
-    --with-postgres=%{_prefix} \
-    --with-popt=%{_prefix} \
-    --with-portaudio=%{_prefix} \
-    --with-pri=%{_prefix} \
-    --with-resample=%{_prefix} \
-    --with-spandsp=%{_prefix} \
-    --with-ss7=%{_prefix} \
+	--with-ogg=%{_prefix} \
+	--with-osptk=%{_prefix} \
+	--with-postgres=%{_prefix} \
+	--with-popt=%{_prefix} \
+	--with-portaudio=%{_prefix} \
+	--with-pri=%{_prefix} \
+	--with-resample=%{_prefix} \
+	--with-spandsp=%{_prefix} \
+	--with-ss7=%{_prefix} \
 %if %{build_h323}
-    --with-pwlib=%{_prefix} \
-    --with-h323=%{_prefix} \
+	--with-pwlib=%{_prefix} \
+	--with-h323=%{_prefix} \
 %else
-    --without-pwlib \
-    --without-h323 \
+	--without-pwlib \
+	--without-h323 \
 %endif
-    --with-radius=%{_prefix} \
-    --with-sdl=%{_prefix} \
-    --with-SDL_image=%{_prefix} \
-    --with-openais=%{_prefix} \
-    --with-speexdsp=%{_prefix} \
-    --without-sqlite \
-    --with-sqlite3=%{_prefix} \
-    --with-ssl=%{_prefix} \
-    --with-tds=%{_prefix} \
-    --with-termcap=%{_prefix} \
-    --without-tinfo \
-    --with-tonezone=%{_prefix} \
-    --with-usb=%{_prefix} \
-    --with-vorbis=%{_prefix} \
-    --without-vpb \
-    --with-x11=%{_prefix} \
-    --with-z=%{_prefix}
+	--with-radius=%{_prefix} \
+	--with-sdl=%{_prefix} \
+	--with-SDL_image=%{_prefix} \
+	--with-openais=%{_prefix} \
+	--with-speexdsp=%{_prefix} \
+	--without-sqlite \
+	--with-sqlite3=%{_prefix} \
+	--with-ssl=%{_prefix} \
+	--with-tds=%{_prefix} \
+	--with-termcap=%{_prefix} \
+	--without-tinfo \
+	--with-tonezone=%{_prefix} \
+	--with-usb=%{_prefix} \
+	--with-vorbis=%{_prefix} \
+	--without-vpb \
+	--with-x11=%{_prefix} \
+	--with-z=%{_prefix}
 
 # fix some weirdos
 GMIME_INCLUDE=`gmime-config --cflags`
@@ -668,8 +668,8 @@ rm -rf %{buildroot}%{_sbindir}/hashtest2
 
 touch %{name}-devel.filelist
 %if %{build_docs}
-    find doc/api/html -name \*.map -size 0 -delete
-    find doc/api/html -type f | sed 's/^/%doc /' | grep -v '\./%{name}-devel.filelist' > %{name}-devel.filelist
+	find doc/api/html -name \*.map -size 0 -delete
+	find doc/api/html -type f | sed 's/^/%doc /' | grep -v '\./%{name}-devel.filelist' > %{name}-devel.filelist
 %endif
 
 # fix ghost files
@@ -713,8 +713,8 @@ chmod u+s %{_bindir}/mpg123
 
 %preun
 if [ "$1" = 0 ]; then
-    echo "Removing setuid root from /usr/bin/mpg123"
-    chmod u-s %{_bindir}/mpg123
+	echo "Removing setuid root from /usr/bin/mpg123"
+	chmod u-s %{_bindir}/mpg123
 fi
 
 %_preun_service asterisk
