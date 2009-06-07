@@ -30,7 +30,7 @@
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	1.6.1.0
+Version:	1.6.1.1
 Release:	%mkrel 1
 License:	GPLv2
 Group:		System/Servers
@@ -697,6 +697,7 @@ touch %{buildroot}/var/log/asterisk/h323_log
 
 %pre
 %_pre_useradd asterisk /var/lib/asterisk /bin/sh
+gpasswd -a asterisk dialout 1>/dev/null
 
 %post
 %create_ghostfile /var/lib/asterisk/astdb asterisk asterisk 640
@@ -721,6 +722,7 @@ fi
 
 %postun
 %_postun_userdel asterisk
+gpasswd -d asterisk dialout 1>/dev/null
 
 %pre plugins-dahdi
 %{_sbindir}/usermod -a -G dahdi asterisk
