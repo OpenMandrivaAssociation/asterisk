@@ -1,3 +1,7 @@
+%define	name	asterisk
+%define	version	1.6.1.2
+%define release	%mkrel 1
+
 %define _requires_exceptions perl(Carp::Heavy)
 
 %define build_h323	0
@@ -29,9 +33,9 @@
 #define beta 4
 
 Summary:	The Open Source PBX
-Name:		asterisk
-Version:	1.6.1.1
-Release:	%mkrel 1
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
