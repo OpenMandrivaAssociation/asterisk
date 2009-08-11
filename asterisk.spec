@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.6.1.2
+%define	version	1.6.1.4
 %define release	%mkrel 1
 
 %define _requires_exceptions perl(Carp::Heavy)
@@ -104,7 +104,8 @@ BuildRequires:	lpc10-devel
 BuildRequires:	lua-devel
 %if %{build_misdn}
 BuildRequires:	isdn4k-utils-devel
-BuildRequires:	misdn-devel >= 1:3.4
+BuildRequires:	isdn4net
+BuildRequires:	misdn2-devel
 %endif
 BuildRequires:	ncurses-devel
 BuildRequires:	net-snmp-devel
