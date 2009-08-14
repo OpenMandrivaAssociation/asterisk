@@ -43,6 +43,7 @@ Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{name}-%{version}
 Source1:	asterisk-logrotate
 Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
+Source4:	g72x_install
 Patch1:		0001-Modify-init-scripts-for-better-Fedora-compatibility.patch
 Patch2:		0002-Modify-modules.conf-so-that-different-voicemail-modu.patch
 Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
@@ -470,6 +471,7 @@ done
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
+cp %{SOURCE4} g72x_install
 
 # Fixup makefile so sound archives aren't downloaded/installed
 %{__perl} -pi -e 's/^all:.*$/all:/' sounds/Makefile
@@ -715,6 +717,7 @@ gpasswd -a asterisk dialout 1>/dev/null
 %create_ghostfile /var/log/asterisk/h323_log asterisk asterisk 640
 echo "Adding setuid root to /usr/bin/mpg123, needed for MOH"
 chmod u+s %{_bindir}/mpg123
+[[ -e %{_docdir}/README.g72x.txt ]] && sh %{_docdir}/g72x_install
 %_post_service asterisk
 
 %preun
@@ -748,6 +751,7 @@ rm -rf %{buildroot}
 %doc doc/modules.txt doc/PEERING doc/queue.txt doc/rtp-packetization.txt
 %doc doc/siptls.txt doc/smdi.txt doc/sms.txt doc/speechrec.txt
 %doc doc/ss7.txt doc/video.txt
+%doc g72x_install
 %{_initrddir}/asterisk
 %attr(0750,asterisk,asterisk) %dir %{_sysconfdir}/asterisk
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adsi.conf
