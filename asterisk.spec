@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.6.1.4
+%define	version	1.6.1.5
 %define release	%mkrel 1
 
 %define _requires_exceptions perl(Carp::Heavy)
@@ -49,20 +49,21 @@ Patch2:		0002-Modify-modules.conf-so-that-different-voicemail-modu.patch
 Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
 Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
 Patch6:		0006-Build-using-external-libedit.diff
+Patch7:		0007-Use-pkgconfig-to-check-for-Gmime-2.2.patch
 Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
 Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
 #Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
-#Patch56:	strlcpy-strlcat-1.6.1-fix.diff
+Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 #Patch57:	editline-include-missing-1.6.1-fix.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Requires:	mpg123
-Requires:	asterisk-core-sounds, asterisk-moh-freeplay
+Requires:	asterisk-core-sounds, asterisk-moh
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
@@ -74,6 +75,7 @@ BuildRequires:	ffmpeg-devel
 BuildRequires:	flex
 BuildRequires:	freetds-devel >= 0.64
 BuildRequires:	libgmime2.2-devel
+BuildRequires:	gmime2.2-utils
 BuildRequires:	gsm-devel
 BuildRequires:	gtk-devel
 BuildRequires:	gtk2-devel
@@ -91,7 +93,7 @@ BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
 BuildRequires:	libnbs-devel
 BuildRequires:	libogg-devel
-BuildRequires:	libosp-devel
+#BuildRequires:	libosp-devel >= 3.5.0
 BuildRequires:	libpopt-devel
 BuildRequires:	libpri-devel >= 1.4.8
 BuildRequires:	libss7-devel >= 1.0.2
@@ -115,6 +117,7 @@ BuildRequires:	oggvorbis-devel
 BuildRequires:	openais-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
+BuildRequires:	osptk-devel >= 3.5.0
 BuildRequires:	pam-devel
 BuildRequires:	perl-devel
 BuildRequires:	portaudio-devel >= 19
@@ -459,6 +462,7 @@ done
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 #
 %patch50 -p1
 %patch51 -p0
@@ -466,7 +470,7 @@ done
 %patch53 -p0
 ##%patch54 -p0
 #%patch55 -p2
-#%patch56 -p0
+%patch56 -p0
 #%patch57 -p0
 
 cp %{SOURCE2} menuselect.makedeps
@@ -516,7 +520,6 @@ sh ./bootstrap.sh
 
 export CFLAGS="%{optflags} `gmime-config --cflags`"
 
-#	--with-gtk=%{_prefix} \
 %configure \
 	--localstatedir=/var \
 	--with-asound=%{_prefix} \
@@ -528,8 +531,8 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-dahdi=%{_prefix} \
 	--with-avcodec=%{_prefix} \
 	--with-gsm=%{_prefix} \
-	--with-gtk2=%{_prefix} \
 	--with-gmime=%{_prefix} \
+	--with-gtk2=%{_prefix} \
 	--with-hoard=%{_prefix} \
 	--with-iconv=%{_prefix} \
 	--with-iksemel=%{_prefix} \
