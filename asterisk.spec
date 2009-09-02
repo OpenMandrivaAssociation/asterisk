@@ -654,6 +654,7 @@ install -D -p -m 0755 apps/app_voicemail_odbc.so %{buildroot}%{_libdir}/asterisk
 %endif
 install -D -p -m 0755 apps/app_directory_plain.so %{buildroot}%{_libdir}/asterisk/modules/
 install -D -p -m 0755 apps/app_voicemail_plain.so %{buildroot}%{_libdir}/asterisk/modules/
+install -D -p -m 0664 menuselect.makeopts %{buildroot}%{_sysconfdir}/asterisk.makeopts
 
 # create some directories that need to be packaged
 mkdir -p %{buildroot}/var/lib/asterisk/moh
@@ -1011,6 +1012,7 @@ rm -rf %{buildroot}
 %files devel -f %{name}-devel.filelist
 %defattr(-,root,root,-)
 %doc doc/CODING-GUIDELINES doc/datastores.txt doc/modules.txt doc/valgrind.txt
+%attr(0644,root,root) %{_sysconfdir}/asterisk.makeopts
 %dir %{_includedir}/asterisk
 %{_includedir}/asterisk.h
 %{_includedir}/asterisk/*.h
