@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.6.1.5
+%define	version	1.6.1.6
 %define release	%mkrel 1
 
 %define _requires_exceptions perl(Carp::Heavy)
@@ -50,6 +50,7 @@ Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
 Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
 Patch6:		0006-Build-using-external-libedit.diff
 Patch7:		0007-Use-pkgconfig-to-check-for-Gmime-2.2.patch
+Patch8:		0008-libusb-check.diff
 Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
 Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
@@ -57,7 +58,7 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
 #Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
-#Patch57:	editline-include-missing-1.6.1-fix.diff
+Patch57:	editline-include-missing-1.6.1-fix.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -99,7 +100,6 @@ BuildRequires:	libpri-devel >= 1.4.8
 BuildRequires:	libss7-devel >= 1.0.2
 BuildRequires:	libtool
 BuildRequires:	libtool-devel
-BuildRequires:	libusb-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
@@ -134,6 +134,7 @@ BuildRequires:	tiff-devel
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
 %endif
+BuildRequires:	usb-devel
 BuildRequires:	wget
 BuildRequires:	zlib-devel
 %if %mdkversion < 200900
@@ -457,21 +458,22 @@ for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type 
 	if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
 done
 
-%patch1 -p1
-%patch2 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+%patch1 -p1 -b .init
+%patch2 -p1 -b .voicemail
+%patch4 -p1 -b .lua
+%patch5 -p1 -b .pbx_lua
+%patch6 -p1 -b .libedit
+%patch7 -p1 -b .gmime-2_2
+#%patch8 -p1 -b .libusb
 #
-%patch50 -p1
-%patch51 -p0
-%patch52 -p1
-%patch53 -p0
-##%patch54 -p0
-#%patch55 -p2
-%patch56 -p0
-#%patch57 -p0
+%patch50 -p1 -b .pthread
+%patch51 -p0 -b .net_snmp
+%patch52 -p1 -b .ffmpeg
+%patch53 -p0 -b .libplc10
+##%patch54 -p0 -b .pwlib
+#%patch55 -p2 -b .KEEPALIVE
+%patch56 -p0 -b .strlcpy
+%patch57 -p0 -b .editline
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -654,7 +656,6 @@ install -D -p -m 0755 apps/app_voicemail_odbc.so %{buildroot}%{_libdir}/asterisk
 %endif
 install -D -p -m 0755 apps/app_directory_plain.so %{buildroot}%{_libdir}/asterisk/modules/
 install -D -p -m 0755 apps/app_voicemail_plain.so %{buildroot}%{_libdir}/asterisk/modules/
-install -D -p -m 0664 menuselect.makeopts %{buildroot}%{_sysconfdir}/asterisk.makeopts
 
 # create some directories that need to be packaged
 mkdir -p %{buildroot}/var/lib/asterisk/moh
@@ -1012,7 +1013,6 @@ rm -rf %{buildroot}
 %files devel -f %{name}-devel.filelist
 %defattr(-,root,root,-)
 %doc doc/CODING-GUIDELINES doc/datastores.txt doc/modules.txt doc/valgrind.txt
-%attr(0644,root,root) %{_sysconfdir}/asterisk.makeopts
 %dir %{_includedir}/asterisk
 %{_includedir}/asterisk.h
 %{_includedir}/asterisk/*.h
