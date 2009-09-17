@@ -1,6 +1,6 @@
 %define	name	asterisk
 %define	version	1.6.1.6
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 %define _requires_exceptions perl(Carp::Heavy)
 
