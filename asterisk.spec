@@ -134,7 +134,7 @@ BuildRequires:	tiff-devel
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
 %endif
-BuildRequires:	usb-devel
+BuildRequires:	usb1.0-devel
 BuildRequires:	wget
 BuildRequires:	zlib-devel
 %if %mdkversion < 200900
