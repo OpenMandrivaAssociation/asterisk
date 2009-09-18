@@ -464,7 +464,7 @@ done
 %patch5 -p1 -b .pbx_lua
 %patch6 -p1 -b .libedit
 %patch7 -p1 -b .gmime-2_2
-#%patch8 -p1 -b .libusb
+%patch8 -p1 -b .libusb
 #
 %patch50 -p1 -b .pthread
 %patch51 -p0 -b .net_snmp
