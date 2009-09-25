@@ -50,7 +50,7 @@ Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
 Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
 Patch6:		0006-Build-using-external-libedit.diff
 Patch7:		0007-Use-pkgconfig-to-check-for-Gmime-2.2.patch
-Patch8:		0008-libusb-check.diff
+#Patch8:		0008-libusb-check.diff
 Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
 Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
@@ -134,7 +134,8 @@ BuildRequires:	tiff-devel
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
 %endif
-BuildRequires:	usb1.0-devel
+#BuildRequires:	usb1.0-devel
+BuildRequires:	libusb-compat0.1-devel
 BuildRequires:	wget
 BuildRequires:	zlib-devel
 %if %mdkversion < 200900
@@ -464,7 +465,7 @@ done
 %patch5 -p1 -b .pbx_lua
 %patch6 -p1 -b .libedit
 %patch7 -p1 -b .gmime-2_2
-%patch8 -p1 -b .libusb
+#%patch8 -p1 -b .libusb
 #
 %patch50 -p1 -b .pthread
 %patch51 -p0 -b .net_snmp
