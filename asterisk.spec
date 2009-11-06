@@ -1,6 +1,6 @@
 %define	name	asterisk
 %define	version	1.6.1.8
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 %define _requires_exceptions perl(Carp::Heavy)
 
@@ -731,6 +731,13 @@ if [ "$1" = 0 ]; then
 	echo "Removing setuid root from /usr/bin/mpg123"
 	chmod u-s %{_bindir}/mpg123
 fi
+# Remove the G72x stuff
+rm -rf /usr/share/doc/asterisk/README.g72x.txt
+rm -rf /usr/$LIBNAME/asterisk/modules/codec_g723.so
+rm -rf /usr/$LIBNAME/asterisk/modules/codec_g729.so
+rm -rf /usr/bin/g729_my_enc
+rm -rf /usr/bin/g729_my_dec
+rm -rf /usr/bin/astconv
 
 %_preun_service asterisk
 
