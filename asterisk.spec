@@ -1,8 +1,9 @@
 %define	name	asterisk
-%define	version	1.6.1.9
+%define	version	1.6.1.11
 %define release	%mkrel 1
 
 %define _requires_exceptions perl(Carp::Heavy)
+%define _disable_ld_no_undefined 1
 
 %define build_h323	0
 %{?_without_h323:	%global build_h323 0}
@@ -16,6 +17,10 @@
 %define build_odbc	0
 %{?_without_odbc:	%global build_odbc 0}
 %{?_with_odbc:		%global build_odbc 1}
+
+%define build_oss      1
+%{?_without_oss:       %global build_oss 0}
+%{?_with_oss:          %global build_oss 1}
 
 %define build_radius	1
 %{?_without_radius:	%global build_radius 0}
@@ -59,6 +64,7 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
+PATCH58:	asterisk-1.6.1.11-chan_agent-logger.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -104,7 +110,7 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
 BuildRequires:	lpc10-devel
-BuildRequires:	lua-devel
+BuildRequires:	liblua-devel
 %if %{build_misdn}
 BuildRequires:	isdn4k-utils-devel
 BuildRequires:	isdn4net
@@ -300,6 +306,7 @@ Requires:	asterisk = %{version}-%{release}
 Applications for Asterisk that use ODBC (except voicemail)
 %endif
 
+%if %{build_oss}
 %package	plugins-oss
 Summary:	Modules for Asterisk that use OSS sound drivers
 Group:		System/Servers
@@ -307,6 +314,15 @@ Requires:	asterisk = %{version}-%{release}
 
 %description	plugins-oss
 Modules for Asterisk that use OSS sound drivers.
+
+%package	plugins-usbradio
+Summary:	USB radio channel for Asterisk
+Group:		System/Servers
+Requires:	asterisk = %{version}-%{release}
+
+%description	plugins-usbradio
+USB radio channel for Asterisk.
+%endif
 
 %package	plugins-portaudio
 Summary:	Modules for Asterisk that use the portaudio library
@@ -392,14 +408,6 @@ Requires:	asterisk = %{version}-%{release}
 %description	plugins-unistim
 Unistim channel for Asterisk.
 
-%package	plugins-usbradio
-Summary:	USB radio channel for Asterisk
-Group:		System/Servers
-Requires:	asterisk = %{version}-%{release}
-
-%description	plugins-usbradio
-USB radio channel for Asterisk.
-
 %package	plugins-voicemail
 Summary:	Common Voicemail Modules for Asterisk
 Group:		System/Servers
@@ -461,20 +469,20 @@ done
 
 %patch1 -p1 -b .init
 %patch2 -p1 -b .voicemail
-%patch4 -p1 -b .lua
-%patch5 -p1 -b .pbx_lua
-%patch6 -p1 -b .libedit
-%patch7 -p1 -b .gmime-2_2
-#%patch8 -p1 -b .libusb
-#
+#%patch4 -p1 -b .lua
+##%patch5 -p1 -b .pbx_lua
+###%patch6 -p1 -b .libedit
+#%patch7 -p1 -b .gmime-2_2
+##%patch8 -p1 -b .libusb
+##
 %patch50 -p1 -b .pthread
 %patch51 -p0 -b .net_snmp
 %patch52 -p1 -b .ffmpeg
 %patch53 -p0 -b .libplc10
 ##%patch54 -p0 -b .pwlib
-#%patch55 -p2 -b .KEEPALIVE
-%patch56 -p0 -b .strlcpy
+#%patch56 -p0 -b .strlcpy
 %patch57 -p0 -b .editline
+%patch58 -p1 -b .logger
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -506,20 +514,20 @@ perl -pi -e "s|/lib/|/%{_lib}/|g" configure*  autoconf/*.m4
 %define optflags %(rpm --eval %%{optflags}) -Werror-implicit-function-declaration
 %endif
 
-rm -f autoconf/ast_prog_sed.m4
-sh ./bootstrap.sh
+#rm -f autoconf/ast_prog_sed.m4
+./bootstrap.sh
 
-#pushd menuselect/mxml
-#%configure
-#popd
+pushd menuselect/mxml
+%configure2_5x
+popd
 
-#pushd menuselect
-#%configure
-#popd 
+pushd menuselect
+%configure2_5x
+popd 
 
-#pushd main/editline
-#%configure
-#popd
+pushd main/editline
+%configure2_5x
+popd
 
 export CFLAGS="%{optflags} `gmime-config --cflags`"
 
@@ -534,15 +542,14 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-dahdi=%{_prefix} \
 	--with-avcodec=%{_prefix} \
 	--with-gsm=%{_prefix} \
-	--with-gmime=%{_prefix} \
 	--with-gtk2=%{_prefix} \
+	--with-gmime=%{_prefix} \
 	--with-hoard=%{_prefix} \
 	--with-iconv=%{_prefix} \
 	--with-iksemel=%{_prefix} \
 	--with-imap=system \
 	--with-jack=%{_prefix} \
 	--with-ldap=%{_prefix} \
-	--with-libedit=%{_prefix} \
 	--with-ltdl=%{_prefix} \
 	--with-lua=%{_prefix} \
 %if %{build_misdn}
@@ -565,6 +572,11 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %endif
 	--with-ogg=%{_prefix} \
 	--with-osptk=%{_prefix} \
+%if %{build_oss}
+	--with-oss \
+%else
+	--without-oss \
+%endif
 	--with-postgres=%{_prefix} \
 	--with-popt=%{_prefix} \
 	--with-portaudio=%{_prefix} \
@@ -583,6 +595,7 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-sdl=%{_prefix} \
 	--with-SDL_image=%{_prefix} \
 	--with-openais=%{_prefix} \
+	--with-speex=%{_prefix} \
 	--with-speexdsp=%{_prefix} \
 	--without-sqlite \
 	--with-sqlite3=%{_prefix} \
@@ -696,16 +709,17 @@ touch %{buildroot}/var/log/asterisk/cdr-csv/Master.csv
 touch %{buildroot}/var/log/asterisk/h323_log
 
 # remove unused files
-%if %{build_odbc}
-%else
+%if !%{build_odbc}
   rm -f %{buildroot}/%{_sysconfdir}/asterisk/cdr_adaptive_odbc.conf
   rm -f %{buildroot}/%{_sysconfdir}/asterisk/cdr_odbc.conf
   rm -f %{buildroot}/%{_sysconfdir}/asterisk/func_odbc.conf
   rm -f %{buildroot}/%{_sysconfdir}/asterisk/res_odbc.conf
 %endif
-%if %{build_misdn}
-%else
+%if !%{build_misdn}
   rm -f %{buildroot}/%{_sysconfdir}/asterisk/misdn.conf
+%endif
+%if !%{build_oss}
+  rm -f %{buildroot}/%{_sysconfdir}/asterisk/oss.conf
 %endif
 
 %pre
@@ -1127,10 +1141,17 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_odbc.so
 %endif
 
+%if %{build_oss}
 %files plugins-oss
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/oss.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_oss.so
+
+%files plugins-usbradio
+%defattr(-,root,root,-)
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/usbradio.conf
+%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_usbradio.so
+%endif
 
 %files plugins-osp
 %defattr(-,root,root)
@@ -1189,11 +1210,6 @@ rm -rf %{buildroot}
 %doc doc/unistim.txt
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/unistim.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_unistim.so
-
-%files plugins-usbradio
-%defattr(-,root,root,-)
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/usbradio.conf
-%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_usbradio.so
 
 %files plugins-voicemail
 %defattr(-,root,root,-)
