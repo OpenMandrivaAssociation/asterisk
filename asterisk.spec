@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.6.1.11
+%define	version	1.6.2.0
 %define release	%mkrel 1
 
 %define _requires_exceptions perl(Carp::Heavy)
@@ -64,7 +64,6 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
-PATCH58:	asterisk-1.6.1.11-chan_agent-logger.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -482,7 +481,6 @@ done
 ##%patch54 -p0 -b .pwlib
 #%patch56 -p0 -b .strlcpy
 %patch57 -p0 -b .editline
-%patch58 -p1 -b .logger
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -548,6 +546,12 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-iconv=%{_prefix} \
 	--with-iksemel=%{_prefix} \
 	--with-imap=system \
+	--with-inotify=%{_prefix} \
+%if %{build_odbc}
+	--with-iodbc=%{_prefix} \
+%else
+	--without-iodbc \
+%endif
 	--with-jack=%{_prefix} \
 	--with-ldap=%{_prefix} \
 	--with-ltdl=%{_prefix} \
@@ -565,11 +569,6 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-ncurses=%{_prefix} \
 	--with-netsnmp=%{_prefix} \
 	--with-newt=%{_prefix} \
-%if %{build_odbc}
-	--with-odbc=%{_prefix} \
-%else
-	--without-odbc \
-%endif
 	--with-ogg=%{_prefix} \
 	--with-osptk=%{_prefix} \
 %if %{build_oss}
@@ -604,17 +603,26 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-termcap=%{_prefix} \
 	--without-tinfo \
 	--with-tonezone=%{_prefix} \
+%if %{build_odbc}
+	--with-unixodbc=%{_prefix} \
+%else
+	--without-unixodbc \
+%endif
 	--with-usb=%{_prefix} \
 	--with-vorbis=%{_prefix} \
 	--without-vpb \
 	--with-x11=%{_prefix} \
-	--with-z=%{_prefix}
+	--with-z=%{_prefix} \
+	--with-timerfd=%{_prefix}
+#urpmf --files openr2.h
+#	--with-openr2=%{_prefix} \
 
 # fix some weirdos
 GMIME_INCLUDE=`gmime-config --cflags`
 perl -pi -e "s|^AIS_INCLUDE=.*|AIS_INCLUDE=-I/usr/include/openais|g" makeopts
 perl -pi -e "s|^GMIME_INCLUDE=.*|GMIME_INCLUDE=$GMIME_INCLUDE|g" makeopts
 
+%{__sed} -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=FILE_STORAGE/' menuselect.makeopts
 ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
 
 rm apps/app_voicemail.o apps/app_directory.o
@@ -792,6 +800,8 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_custom.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_manager.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cli.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cli_aliases.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cli_permissions.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/codecs.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/dnsmgr.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/dsp.conf
@@ -841,6 +851,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_chanisavail.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_channelredirect.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_chanspy.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/app_confbridge.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_controlplayback.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_db.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_dial.so
@@ -862,8 +873,10 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_morsecode.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_mp3.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_nbscat.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/app_originate.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_parkandannounce.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_playback.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/app_playtones.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_privacy.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_queue.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_readexten.so
@@ -892,11 +905,15 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_verbose.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_while.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_zapateller.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/bridge_builtin_features.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/bridge_multiplexed.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/bridge_simple.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/bridge_softmix.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_csv.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_custom.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_manager.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_agent.so
-#%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_features.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_bridge.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_iax2.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_local.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_mgcp.so
@@ -923,12 +940,15 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_jpeg.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_ogg_vorbis.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_pcm.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/format_siren14.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/format_siren7.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_sln16.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_sln.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_wav_gsm.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_wav.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_vox.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_audiohookinherit.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/func_aes.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_base64.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_blacklist.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_callerid.so
@@ -955,6 +975,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_realtime.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_sha1.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_shell.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/func_sprintf.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_strings.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_sysinfo.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_timeout.so
@@ -971,11 +992,11 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_adsi.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_ael_share.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_agi.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/res_clialiases.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_clioriginate.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_convert.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_crypto.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_http_post.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/res_indications.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_limit.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_monitor.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_musiconhold.so
@@ -984,8 +1005,10 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_smdi.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_speech.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_pthread.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_timerfd.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_dlinklists.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_heap.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/test_sched.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/test_skel.so
 %attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
@@ -1008,6 +1031,7 @@ rm -rf %{buildroot}
 %{_mandir}/man8/safe_asterisk.8*
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/agi-bin
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/documentation
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/images
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
@@ -1193,6 +1217,7 @@ rm -rf %{buildroot}
 %files plugins-sqlite
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_sqlite3_custom.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_config_sqlite.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_sqlite3_custom.so
 
 %files plugins-speex
