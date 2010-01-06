@@ -18,9 +18,9 @@
 %{?_without_odbc:	%global build_odbc 0}
 %{?_with_odbc:		%global build_odbc 1}
 
-%define build_oss      1
-%{?_without_oss:       %global build_oss 0}
-%{?_with_oss:          %global build_oss 1}
+%define build_oss	1
+%{?_without_oss:	%global build_oss 0}
+%{?_with_oss:		%global build_oss 1}
 
 %define build_radius	1
 %{?_without_radius:	%global build_radius 0}
@@ -70,7 +70,7 @@ Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
-BuildRequires:	alsa-lib-devel
+BuildRequires:	alsa2-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
 BuildRequires:	bison
