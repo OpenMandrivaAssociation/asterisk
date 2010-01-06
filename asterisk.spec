@@ -70,7 +70,7 @@ Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
-BuildRequires:	alsa2-devel
+BuildRequires:	%{_lib}alsa2-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
 BuildRequires:	bison
@@ -109,7 +109,7 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
 BuildRequires:	lpc10-devel
-BuildRequires:	liblua-devel
+BuildRequires:	%{_lib}lua-devel
 %if %{build_misdn}
 BuildRequires:	isdn4k-utils-devel
 BuildRequires:	isdn4net
