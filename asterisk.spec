@@ -745,7 +745,7 @@ gpasswd -a asterisk dialout 1>/dev/null
 %create_ghostfile /var/log/asterisk/h323_log asterisk asterisk 640
 echo "Adding setuid root to /usr/bin/mpg123, needed for MOH"
 chmod u+s %{_bindir}/mpg123
-[[ -e %{_docdir}/README.g72x.txt ]] && sh %{_docdir}/g72x_install
+[[ -e %{_libdir}/asterisk/modules/codec_g729.so ]] && sh %{_docdir}/g72x_install
 %_post_service asterisk
 
 %preun
