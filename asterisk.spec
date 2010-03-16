@@ -64,6 +64,8 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 #Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
+# Temporary patch
+Patch100:	asterisk-1.6.2.6-cdr_sqlite3_custom.patch
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -481,6 +483,7 @@ done
 ##%patch54 -p0 -b .pwlib
 #%patch56 -p0 -b .strlcpy
 %patch57 -p0 -b .editline
+%patch100 -p2
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
