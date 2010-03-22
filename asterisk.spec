@@ -1,6 +1,6 @@
 %define	name	asterisk
 %define	version	1.6.2.6
-%define release	%mkrel 2
+%define release	%mkrel 3
 
 %define _requires_exceptions perl(Carp::Heavy)
 %define _disable_ld_no_undefined 1
@@ -108,6 +108,7 @@ BuildRequires:	libss7-devel >= 1.0.2
 BuildRequires:	libtool
 BuildRequires:	libtool-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	%{_lib}xml2-devel
 BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
 BuildRequires:	lpc10-devel
