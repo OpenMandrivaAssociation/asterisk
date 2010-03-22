@@ -1,6 +1,6 @@
 %define	name	asterisk
 %define	version	1.6.2.6
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 %define _requires_exceptions perl(Carp::Heavy)
 %define _disable_ld_no_undefined 1
@@ -85,8 +85,8 @@ BuildRequires:	freetds-devel >= 0.64
 BuildRequires:	libgmime2.2-devel
 BuildRequires:	gmime2.2-utils
 BuildRequires:	gsm-devel
-BuildRequires:	gtk-devel
-BuildRequires:	gtk2-devel
+#BuildRequires:	gtk-devel
+#BuildRequires:	gtk2-devel
 BuildRequires:	jackit-devel
 BuildRequires:	krb5-devel
 BuildRequires:	libcap-devel
@@ -543,7 +543,8 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-dahdi=%{_prefix} \
 	--with-avcodec=%{_prefix} \
 	--with-gsm=%{_prefix} \
-	--with-gtk2=%{_prefix} \
+	--without-gtk \
+	--without-gtk2 \
 	--with-gmime=%{_prefix} \
 	--with-hoard=%{_prefix} \
 	--with-iconv=%{_prefix} \
@@ -988,7 +989,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_ael.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_config.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_dundi.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_gtkconsole.so
+#%attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_gtkconsole.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_loopback.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_realtime.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_spool.so
