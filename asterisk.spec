@@ -1,6 +1,7 @@
 %define	name	asterisk
-%define	version	1.6.2.6
-%define release	%mkrel 4
+%define	version	1.6.2.10
+#define beta rc1
+%define release	%mkrel %{?beta:0.%{beta}.}1
 
 %define _requires_exceptions perl(Carp::Heavy)
 %define _disable_ld_no_undefined 1
@@ -35,8 +36,6 @@
 %{?_without_docs:	%global build_docs 0}
 %{?_with_docs:		%global build_docs 1}
 
-#define beta 4
-
 Summary:	The Open Source PBX
 Name:		%{name}
 Version:	%{version}
@@ -44,7 +43,7 @@ Release:	%{release}
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
-Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{name}-%{version}%{?beta:-rc%{beta}}.tar.gz
+Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{name}-%{version}%{?beta:-%{beta}}.tar.gz
 Source1:	asterisk-logrotate
 Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
@@ -55,17 +54,14 @@ Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
 Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
 Patch6:		0006-Build-using-external-libedit.diff
 Patch7:		0007-Use-pkgconfig-to-check-for-Gmime-2.2.patch
-#Patch8:		0008-libusb-check.diff
 Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
 Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
-#Patch54:	asterisk-1.6.1-beta3-pwlib_and_openh323_fix.diff
-#Patch55:	AST_PBX_KEEPALIVE-1.6.1-fix.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 # Temporary patch
-Patch100:	asterisk-1.6.2.6-cdr_sqlite3_custom.patch
+#Patch100:	asterisk-1.6.2.6-cdr_sqlite3_custom.patch
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -101,7 +97,6 @@ BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
 BuildRequires:	libnbs-devel
 BuildRequires:	libogg-devel
-#BuildRequires:	libosp-devel >= 3.5.0
 BuildRequires:	libpopt-devel
 BuildRequires:	libpri-devel >= 1.4.8
 BuildRequires:	libss7-devel >= 1.0.2
@@ -142,7 +137,6 @@ BuildRequires:	tiff-devel
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
 %endif
-#BuildRequires:	usb1.0-devel
 BuildRequires:	%{_lib}usb-compat0.1-devel
 BuildRequires:	wget
 BuildRequires:	zlib-devel
@@ -458,7 +452,7 @@ local filesystem.
 
 %prep
 
-%setup0 -q -n asterisk-%{version}%{?beta:-rc%{beta}}
+%setup0 -q -n asterisk-%{version}%{?beta:-%{beta}}
 
 find . -type d -perm 0700 -exec chmod 755 {} \;
 find . -type d -perm 0555 -exec chmod 755 {} \;
@@ -484,7 +478,7 @@ done
 ##%patch54 -p0 -b .pwlib
 #%patch56 -p0 -b .strlcpy
 %patch57 -p0 -b .editline
-%patch100 -p2
+#%patch100 -p2
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -536,13 +530,13 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %configure \
 	--localstatedir=/var \
 	--with-asound=%{_prefix} \
-	--with-execinfo=%{_prefix} \
+	--with-avcodec=%{_prefix} \
 	--with-cap=%{_prefix} \
 	--with-curl=%{_prefix} \
 	--with-curses=%{_prefix} \
 	--with-crypto=%{_prefix} \
 	--with-dahdi=%{_prefix} \
-	--with-avcodec=%{_prefix} \
+	--with-execinfo=%{_prefix} \
 	--with-gsm=%{_prefix} \
 	--without-gtk \
 	--without-gtk2 \
@@ -990,7 +984,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_ael.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_config.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_dundi.so
-#%attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_gtkconsole.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_loopback.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_realtime.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/pbx_spool.so
@@ -1011,17 +1004,12 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_speech.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_pthread.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_timerfd.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/test_dlinklists.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/test_heap.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/test_sched.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/test_skel.so
 %attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
 %attr(0755,root,root) %{_sbindir}/asterisk
 %attr(0755,root,root) %{_sbindir}/astgenkey
 %attr(0755,root,root) %{_sbindir}/astman
 %attr(0755,root,root) %{_sbindir}/autosupport
-#%attr(0755,root,root) %{_sbindir}/check_expr
 %attr(0755,root,root) %{_sbindir}/conf2ael
 %attr(0755,root,root) %{_sbindir}/muted
 %attr(0755,root,root) %{_sbindir}/rasterisk
