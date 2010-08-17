@@ -786,6 +786,7 @@ rm -rf %{buildroot}
 %doc doc/siptls.txt doc/smdi.txt doc/sms.txt doc/speechrec.txt
 %doc doc/ss7.txt doc/video.txt
 %doc g72x_install
+%doc contrib/realtime/mysql
 %{_initrddir}/asterisk
 %attr(0750,asterisk,asterisk) %dir %{_sysconfdir}/asterisk
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adsi.conf
@@ -1182,7 +1183,7 @@ rm -rf %{buildroot}
 
 %files plugins-pgsql
 %defattr(-,root,root,-)
-%doc contrib/scripts/realtime_pgsql.sql
+%doc contrib/realtime/postgresql/realtime.sql
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cdr_pgsql.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_pgsql.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/cdr_pgsql.so
