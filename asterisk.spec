@@ -61,8 +61,6 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 Patch58:	asterisk-neon-include-fix.patch
-# Temporary patch
-Patch100:	asterisk-res-calendar-exchange.diff
 Requires(pre): rpm-helper
 Requires(postun): rpm-helper
 Requires(post): rpm-helper
@@ -575,7 +573,6 @@ done
 #%patch56 -p0 -b .strlcpy
 %patch57 -p0 -b .editline
 %patch58 -p1 -b .neon
-%patch100 -p0
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
