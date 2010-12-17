@@ -95,7 +95,7 @@ BuildRequires:	libical-devel
 BuildRequires:	libidn-devel
 BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
-BuildRequires:	libmysql-devel
+BuildRequires:	%{_lib}mysql-devel
 BuildRequires:	libnbs-devel
 BuildRequires:	libneon0.27-devel
 BuildRequires:	libogg-devel
