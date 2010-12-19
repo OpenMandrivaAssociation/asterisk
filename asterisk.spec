@@ -133,7 +133,7 @@ BuildRequires:	SDL_image-devel
 BuildRequires:	spandsp-devel
 BuildRequires:	speex-devel
 BuildRequires:	sqlite3-devel
-BuildRequires:	srtp-static-devel
+BuildRequires:	srtp
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	termcap-devel
 BuildRequires:	tiff-devel
@@ -1147,12 +1147,12 @@ rm -rf %{buildroot}
 %{_mandir}/man8/autosupport.8*
 %{_mandir}/man8/safe_asterisk.8*
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk
-%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/agi-bin
-%attr(0750,asterisk,asterisk) /var/lib/asterisk/documentation
-%attr(0750,asterisk,asterisk) /var/lib/asterisk/images
-%attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
-%attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
-%attr(0750,asterisk,asterisk) /var/lib/asterisk/static-http
+#%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/agi-bin
+#%attr(0750,asterisk,asterisk) /var/lib/asterisk/documentation
+#%attr(0750,asterisk,asterisk) /var/lib/asterisk/images
+#%attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
+#%attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
+#%attr(0750,asterisk,asterisk) /var/lib/asterisk/static-http
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/moh
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/sounds
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk
