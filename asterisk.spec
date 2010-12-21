@@ -607,6 +607,8 @@ perl -pi -e "s|/lib/|/%{_lib}/|g" configure*  autoconf/*.m4
 #rm -f autoconf/ast_prog_sed.m4
 ./bootstrap.sh
 
+sed 's#localstatedir}/lib64#localstatedir}/lib#g' -i configure.ac
+
 pushd menuselect/mxml
 %configure2_5x
 popd
@@ -715,6 +717,7 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 #urpmf --files openr2.h
 #	--with-openr2=%{_prefix} \
 
+sed 's#localstatedir}/lib64#localstatedir}/lib#g' -i makeopts
 #fix --no-undefined
 sed -e 's/,--no-undefined -Wl//g' -i makeopts
 
@@ -785,12 +788,14 @@ install -D -p -m 0755 apps/app_directory_plain.so %{buildroot}%{_libdir}/asteris
 install -D -p -m 0755 apps/app_voicemail_plain.so %{buildroot}%{_libdir}/asterisk/modules/
 
 # create some directories that need to be packaged
-mkdir -p %{buildroot}/var/lib/asterisk/moh
-mkdir -p %{buildroot}/var/lib/asterisk/sounds
-mkdir -p %{buildroot}/var/lib/asterisk
-mkdir -p %{buildroot}/var/log/asterisk/cdr-custom
-mkdir -p %{buildroot}/var/spool/asterisk/monitor
-mkdir -p %{buildroot}/var/spool/asterisk/outgoing
+make installdirs DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
+
+#mkdir -p %{buildroot}/var/lib/asterisk/moh
+#mkdir -p %{buildroot}/var/lib/asterisk/sounds
+#mkdir -p %{buildroot}/var/lib/asterisk
+#mkdir -p %{buildroot}/var/log/asterisk/cdr-custom
+#mkdir -p %{buildroot}/var/spool/asterisk/monitor
+#mkdir -p %{buildroot}/var/spool/asterisk/outgoing
 
 # We're not going to package any of the sample AGI scripts
 rm -f %{buildroot}/var/lib/asterisk/agi-bin/*
@@ -1147,12 +1152,12 @@ rm -rf %{buildroot}
 %{_mandir}/man8/autosupport.8*
 %{_mandir}/man8/safe_asterisk.8*
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk
-#%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/agi-bin
-#%attr(0750,asterisk,asterisk) /var/lib/asterisk/documentation
-#%attr(0750,asterisk,asterisk) /var/lib/asterisk/images
-#%attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
-#%attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
-#%attr(0750,asterisk,asterisk) /var/lib/asterisk/static-http
+%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/agi-bin
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/documentation
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/images
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
+%attr(0750,asterisk,asterisk) /var/lib/asterisk/static-http
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/moh
 %attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/sounds
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk
