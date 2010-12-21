@@ -789,13 +789,7 @@ install -D -p -m 0755 apps/app_voicemail_plain.so %{buildroot}%{_libdir}/asteris
 
 # create some directories that need to be packaged
 make installdirs DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
-
-#mkdir -p %{buildroot}/var/lib/asterisk/moh
-#mkdir -p %{buildroot}/var/lib/asterisk/sounds
-#mkdir -p %{buildroot}/var/lib/asterisk
-#mkdir -p %{buildroot}/var/log/asterisk/cdr-custom
-#mkdir -p %{buildroot}/var/spool/asterisk/monitor
-#mkdir -p %{buildroot}/var/spool/asterisk/outgoing
+mkdir -p %{buildroot}/var/spool/asterisk/outgoing
 
 # We're not going to package any of the sample AGI scripts
 rm -f %{buildroot}/var/lib/asterisk/agi-bin/*
@@ -1158,8 +1152,6 @@ rm -rf %{buildroot}
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/keys
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/phoneprov
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/static-http
-%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/moh
-%attr(0750,asterisk,asterisk) %dir /var/lib/asterisk/sounds
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk/cdr-csv
 %attr(0750,asterisk,asterisk) %dir /var/log/asterisk/cdr-custom
