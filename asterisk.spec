@@ -30,11 +30,6 @@
 %{?_without_tds:	%global build_tds 0}
 %{?_with_tds:		%global build_tds 1}
 
-# this takes quite some time and adds roughly 200mb of html...
-%define build_docs	0
-%{?_without_docs:	%global build_docs 0}
-%{?_with_docs:		%global build_docs 1}
-
 Summary:	The Open Source PBX
 Name:		%{name}
 Version:	%{version}
@@ -48,23 +43,18 @@ Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
 Source4:	g72x_install
 Source5:	asterisk-mp3.tar.bz2
-#Patch1:		0001-Modify-init-scripts-for-better-Fedora-compatibility.patch
+
 Patch2:		0002-Modify-modules.conf-so-that-different-voicemail-modu.patch
-Patch4:		0004-Use-pkgconfig-to-check-for-Lua.patch
-Patch5:		0005-Revert-changes-to-pbx_lua-from-rev-126363-that-cause.patch
-Patch6:		0006-Build-using-external-libedit.diff
-Patch7:		0007-Use-pkgconfig-to-check-for-Gmime-2.2.patch
 Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
 Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
 Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
-Patch56:	strlcpy-strlcat-1.6.1-fix.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 Patch58:	asterisk-neon-include-fix.patch
-Requires(pre): rpm-helper
-Requires(postun): rpm-helper
-Requires(post): rpm-helper
-Requires(preun): rpm-helper
+Requires(pre):	rpm-helper
+Requires(postun):	rpm-helper
+Requires(post):	rpm-helper
+Requires(preun):	rpm-helper
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
 BuildRequires:	%{_lib}alsa2-devel
@@ -80,8 +70,6 @@ BuildRequires:	freetds-devel >= 0.64
 BuildRequires:	libgmime2.2-devel
 BuildRequires:	gmime2.2-utils
 BuildRequires:	gsm-devel
-#BuildRequires:	gtk-devel
-#BuildRequires:	gtk2-devel
 BuildRequires:	jackit-devel
 BuildRequires:	krb5-devel
 BuildRequires:	libcap-devel
@@ -141,7 +129,6 @@ BuildRequires:	tiff-devel
 BuildRequires:	unixODBC-devel
 %endif
 BuildRequires:	%{_lib}usb-compat0.1-devel
-#BuildRequires:	%{_lib}usb1.0-devel
 BuildRequires:	wget
 BuildRequires:	zlib-devel
 %if %mdkversion < 200900
@@ -153,10 +140,6 @@ BuildRequires:	c-client-devel
 BuildRequires:	ooh323c-devel
 BuildRequires:	openh323-devel >= 1.15.3
 BuildRequires:	pwlib-devel
-%endif
-%if %{build_docs}
-BuildRequires:	doxygen
-BuildRequires:	graphviz
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 
@@ -327,11 +310,11 @@ Requires:	asterisk = %{version}-%{release}
 MiniVM application for Asterisk.
 
 %package	plugins-mobile
-Summary:        Asterisk channel driver for bluetooth phones and headsets
-Group:          System/Servers
-BuildRequires:  libbluez-devel
-Requires:       %{_lib}bluez3
-Requires:       asterisk = %{version}-%{release}
+Summary:	Asterisk channel driver for bluetooth phones and headsets
+Group:		System/Servers
+BuildRequires:	libbluez-devel
+Requires:	%{_lib}bluez3
+Requires:	asterisk = %{version}-%{release}
 
 %description	plugins-mobile
 Asterisk channel driver to allow Bluetooth cell/mobile phones to be
@@ -364,11 +347,11 @@ Applications for Asterisk that use ODBC (except voicemail)
 %endif
 
 %package        plugins-ooh323
-Summary:        Objective System's H323 for Asterisk
-Group:          System/Servers
-Requires:       asterisk = %{version}-%{release}
+Summary:	Objective System's H323 for Asterisk
+Group:		System/Servers
+Requires:	asterisk = %{version}-%{release}
 
-%description    plugins-ooh323
+%description	plugins-ooh323
 Objective System's H323 for Asterisk.
 
 %if %{build_oss}
@@ -557,20 +540,12 @@ for i in `find . -type d -name CVS` `find . -type f -name .cvs\*` `find . -type 
 	if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
 done
 
-#%patch1 -p1 -b .init
 %patch2 -p1 -b .voicemail
-#%patch4 -p1 -b .lua
-##%patch5 -p1 -b .pbx_lua
-###%patch6 -p1 -b .libedit
-#%patch7 -p1 -b .gmime-2_2
-##%patch8 -p1 -b .libusb
 ##
 %patch50 -p1 -b .pthread
 %patch51 -p0 -b .net_snmp
 %patch52 -p1 -b .ffmpeg
 %patch53 -p0 -b .libplc10
-##%patch54 -p0 -b .pwlib
-#%patch56 -p0 -b .strlcpy
 %patch57 -p0 -b .editline
 %patch58 -p1 -b .neon
 
@@ -604,7 +579,6 @@ perl -pi -e "s|/lib/|/%{_lib}/|g" configure*  autoconf/*.m4
 %define optflags %(rpm --eval %%{optflags}) -Werror-implicit-function-declaration
 %endif
 
-#rm -f autoconf/ast_prog_sed.m4
 ./bootstrap.sh
 
 sed 's#localstatedir}/lib64#localstatedir}/lib#g' -i configure.ac
@@ -715,7 +689,7 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--without-x11 \
 	--with-z=%{_prefix} \
 #urpmf --files openr2.h
-#	--with-openr2=%{_prefix} \
+#	--with-openr2=#{_prefix} \
 
 sed 's#localstatedir}/lib64#localstatedir}/lib#g' -i makeopts
 #fix --no-undefined
@@ -753,13 +727,6 @@ mv apps/app_directory.so apps/app_directory_odbc.so
 touch apps/app_voicemail.o apps/app_directory.o
 touch apps/app_voicemail.so apps/app_directory.so
 
-%if %{build_docs}
-ASTCFLAGS="%{optflags}" make progdocs DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
-
-# fix dates so that we don't get multilib conflicts
-find doc/api/html -type f -print0 | xargs --null touch -r ChangeLog
-%endif
-
 %install
 rm -rf %{buildroot}
 
@@ -767,10 +734,7 @@ ASTCFLAGS="%{optflags}" make install DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVA
 ASTCFLAGS="%{optflags}" make samples DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
 
 install -D -p -m 0755 contrib/init.d/rc.redhat.asterisk %{buildroot}%{_initrddir}/asterisk
-#install -D -p -m 0644 contrib/sysconfig/asterisk %{buildroot}%{_sysconfdir}/sysconfig/asterisk
 install -D -p -m 0644 %{S:1} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
-#install -D -p -m 0644 doc/asterisk-mib.txt %{buildroot}/var/lib/snmp/mibs/ASTERISK-MIB.txt
-#install -D -p -m 0644 doc/digium-mib.txt %{buildroot}/var/lib/snmp/mibs/DIGIUM-MIB.txt
 
 install -D -p -m 0644 contrib/editors/ael.vim %{buildroot}%{_datadir}/vim/syntax/ael.vim
 install -D -p -m 0644 contrib/editors/asterisk.vim %{buildroot}%{_datadir}/vim/syntax/asterisk.vim
@@ -805,10 +769,6 @@ rm -rf %{buildroot}%{_sbindir}/hashtest
 rm -rf %{buildroot}%{_sbindir}/hashtest2
 
 touch %{name}-devel.filelist
-%if %{build_docs}
-	find doc/api/html -name \*.map -size 0 -delete
-	find doc/api/html -type f | sed 's/^/%doc /' | grep -v '\./%{name}-devel.filelist' > %{name}-devel.filelist
-%endif
 
 # fix ghost files
 touch %{buildroot}/var/lib/asterisk/astdb
@@ -859,12 +819,12 @@ if [ "$1" = 0 ]; then
 	chmod u-s %{_bindir}/mpg123
 fi
 # Remove the G72x stuff
-rm -rf /usr/share/doc/asterisk/README.g72x.txt
-rm -rf /usr/$LIBNAME/asterisk/modules/codec_g723.so
-rm -rf /usr/$LIBNAME/asterisk/modules/codec_g729.so
-rm -rf /usr/bin/g729_my_enc
-rm -rf /usr/bin/g729_my_dec
-rm -rf /usr/bin/astconv
+rm -f /usr/share/doc/asterisk/README.g72x.txt
+rm -f /usr/$LIBNAME/asterisk/modules/codec_g723.so
+rm -f /usr/$LIBNAME/asterisk/modules/codec_g729.so
+rm -f /usr/bin/g729_my_enc
+rm -f /usr/bin/g729_my_dec
+rm -f /usr/bin/astconv
 
 %_preun_service asterisk
 
@@ -894,7 +854,6 @@ rm -rf %{buildroot}
 %{_initrddir}/asterisk
 %attr(0750,asterisk,asterisk) %dir %{_sysconfdir}/asterisk
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adsi.conf
-#%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adtranvofr.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/agents.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/alarmreceiver.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/amd.conf
@@ -947,7 +906,6 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/users.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/vpb.conf
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/logrotate.d/asterisk
-#%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/asterisk
 %dir %{_libdir}/asterisk
 %dir %{_libdir}/asterisk/modules
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_adsiprog.so
@@ -1381,12 +1339,7 @@ rm -rf %{buildroot}
 
 %files plugins-snmp
 %defattr(-,root,root,-)
-#%doc doc/asterisk-mib.txt
-#%doc doc/digium-mib.txt
-#%doc doc/snmp.txt
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_snmp.conf
-#%attr(0644,root,root) /var/lib/snmp/mibs/ASTERISK-MIB.txt
-#%attr(0644,root,root) /var/lib/snmp/mibs/DIGIUM-MIB.txt
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_snmp.so
 
 %files plugins-sqlite
