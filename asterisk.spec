@@ -1,6 +1,6 @@
 %define	name	asterisk
 %define	version	1.8.3
-%define beta rc1
+%define beta rc2
 %define release	%mkrel %{?beta:0.0.%{beta}.}1
 
 %define _requires_exceptions perl(Carp::Heavy)
