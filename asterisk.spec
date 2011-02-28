@@ -1,6 +1,6 @@
 %define	name	asterisk
 %define	version	1.8.3
-%define beta rc3
+#define beta rc3
 %define release	%mkrel %{?beta:0.0.%{beta}.}2
 
 %define _requires_exceptions perl(Carp::Heavy)
@@ -37,7 +37,7 @@ Release:	%{release}
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
-Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{name}-%{version}%{?beta:-%{beta}}.tar.gz
+Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{?!beta:releases/}%{name}-%{version}%{?beta:-%{beta}}.tar.gz
 Source1:	asterisk-logrotate
 Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
