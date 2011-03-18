@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.8.3
+%define	version	1.8.3.2
 #define beta rc3
 %define release	%mkrel %{?beta:0.0.%{beta}.}1
 
@@ -57,7 +57,7 @@ Requires(post):	rpm-helper
 Requires(preun):	rpm-helper
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
-BuildRequires:	%{_lib}alsa2-devel
+BuildRequires:	%{_lib}alsa-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
 BuildRequires:	bison
