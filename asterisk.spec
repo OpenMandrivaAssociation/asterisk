@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.8.3.2
+%define	version	1.8.4.1
 #define beta rc3
 %define release	%mkrel %{?beta:0.0.%{beta}.}1
 
