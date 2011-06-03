@@ -1,5 +1,5 @@
 %define	name	asterisk
-%define	version	1.8.4.1
+%define	version	1.8.4.2
 #define beta rc3
 %define release	%mkrel %{?beta:0.0.%{beta}.}1
 
@@ -1158,7 +1158,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/calendar.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_caldav.so
+#%attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_caldav.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_ews.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_exchange.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_icalendar.so
