@@ -110,6 +110,7 @@ BuildRequires:	oggvorbis-devel
 BuildRequires:	openais-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
+BuildRequires:	openr2-devel
 BuildRequires:	osptk-devel >= 3.6.0
 BuildRequires:	pam-devel
 BuildRequires:	perl-devel
@@ -644,6 +645,7 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-newt=%{_prefix} \
 	--with-ogg=%{_prefix} \
 	--with-openais=%{_prefix} \
+	--with-openr2=%{_prefix} \
 	--with-osptk=%{_prefix} \
 %if %{build_oss}
 	--with-oss \
@@ -688,8 +690,6 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--without-vpb \
 	--without-x11 \
 	--with-z=%{_prefix} \
-#urpmf --files openr2.h
-#	--with-openr2=#{_prefix} \
 
 sed 's#localstatedir}/lib64#localstatedir}/lib#g' -i makeopts
 #fix --no-undefined
@@ -1158,7 +1158,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/calendar.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar.so
-#%attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_caldav.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_caldav.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_ews.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_exchange.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_calendar_icalendar.so
