@@ -1,8 +1,3 @@
-%define	name	asterisk
-%define	version	1.8.4.2
-#define beta rc3
-%define release	%mkrel %{?beta:0.0.%{beta}.}1
-
 %define _requires_exceptions perl(Carp::Heavy)
 %define _disable_ld_no_undefined 1
 
@@ -30,10 +25,12 @@
 %{?_without_tds:	%global build_tds 0}
 %{?_with_tds:		%global build_tds 1}
 
+#define beta rc3
+
 Summary:	The Open Source PBX
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		asterisk
+Version:	1.8.4.2
+Release:	%mkrel %{?beta:0.0.%{beta}.}1
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
