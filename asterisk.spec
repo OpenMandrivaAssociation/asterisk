@@ -29,7 +29,7 @@
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	1.8.4.4
+Version:	1.8.5.0
 Release:	%mkrel %{?beta:0.0.%{beta}.}1
 License:	GPLv2
 Group:		System/Servers
@@ -599,13 +599,11 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-asound=%{_prefix} \
 	--with-avcodec=%{_prefix} \
 	--with-cap=%{_prefix} \
-	--with-curl=%{_prefix} \
 	--with-curses=%{_prefix} \
 	--with-crypto=%{_prefix} \
 	--with-dahdi=%{_prefix} \
 	--with-execinfo=%{_prefix} \
 	--with-gsm=%{_prefix} \
-	--without-gtk \
 	--without-gtk2 \
 	--with-gmime=%{_prefix} \
 	--with-hoard=%{_prefix} \
