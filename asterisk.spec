@@ -732,7 +732,6 @@ install -D -p -m 0755 contrib/init.d/rc.redhat.asterisk %{buildroot}%{_initrddir
 install -D -p -m 0644 %{S:1} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
 
 install -D -p -m 0644 contrib/editors/ael.vim %{buildroot}%{_datadir}/vim/syntax/ael.vim
-install -D -p -m 0644 contrib/editors/asterisk.vim %{buildroot}%{_datadir}/vim/syntax/asterisk.vim
 install -D -p -m 0644 contrib/editors/asteriskvm.vim %{buildroot}%{_datadir}/vim/syntax/asteriskvm.vim
 
 rm %{buildroot}%{_libdir}/asterisk/modules/app_directory.so
@@ -1123,7 +1122,6 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/messages
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/queue_log
 %attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/ael.vim
-%attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/asterisk.vim
 %attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/asteriskvm.vim
 
 %files devel -f %{name}-devel.filelist
