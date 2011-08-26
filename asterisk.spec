@@ -30,7 +30,7 @@
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	1.8.5.0
-Release:	%mkrel %{?beta:0.0.%{beta}.}4
+Release:	%mkrel %{?beta:0.0.%{beta}.}5
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -835,9 +835,9 @@ gpasswd -d asterisk dialout 1>/dev/null
 %endif
 
 %pre plugins-mobile
-[[ -e %{_sysconfdir}/asterisk/mobile.conf ]] && mv %{_sysconfdir}/asterisk/{,chan_}mobile.conf
-# -e may return 1 and make the scriplet fail
-exit 0
+if [[ -e %{_sysconfdir}/asterisk/mobile.conf ]] ; then
+  mv -f %{_sysconfdir}/asterisk/{,chan_}mobile.conf
+fi
 
 %clean
 rm -rf %{buildroot}
