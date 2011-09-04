@@ -545,7 +545,7 @@ done
 %patch52 -p1 -b .ffmpeg
 %patch53 -p0 -b .libplc10
 %patch57 -p0 -b .editline
-%patch58 -p1 -b .neon
+%patch58 -p0 -b .neon
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
