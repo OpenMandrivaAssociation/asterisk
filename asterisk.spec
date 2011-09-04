@@ -1078,6 +1078,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_stun_monitor.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_pthread.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_timerfd.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/test_linkedlists.so
 %attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
 %attr(0755,root,root) %{_sbindir}/asterisk
@@ -1128,6 +1129,7 @@ rm -rf %{buildroot}
 %files devel -f %{name}-devel.filelist
 %defattr(-,root,root,-)
 %dir %{_includedir}/asterisk
+%dir %{_includedir}/asterisk/doxygen
 %{_includedir}/asterisk.h
 %{_includedir}/asterisk/*.h
 %{_includedir}/asterisk/doxygen/*.h
