@@ -29,7 +29,7 @@
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	1.8.6.0
+Version:	1.8.7.0
 Release:	%mkrel %{?beta:0.0.%{beta}.}5
 License:	GPLv2
 Group:		System/Servers
