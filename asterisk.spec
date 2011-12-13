@@ -75,7 +75,6 @@ BuildRequires:	libgcrypt-devel
 BuildRequires:	libgnutls-devel
 BuildRequires:	libgpg-error-devel
 BuildRequires:	libgsm-devel
-BuildRequires:	%{_lib}gtk+2.0-devel
 BuildRequires:	%mklibname hoard
 BuildRequires:	libical-devel
 BuildRequires:	libidn-devel
