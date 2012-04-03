@@ -88,7 +88,7 @@ BuildRequires:	mysql-devel
 BuildRequires:	libnbs-devel
 BuildRequires:	neon-devel
 BuildRequires:	libogg-devel
-BuildRequires:	libpopt-devel
+BuildRequires:	popt-devel
 BuildRequires:	libpri-devel >= 1.4.12
 BuildRequires:	libss7-devel >= 1.0.2
 BuildRequires:	libtool
