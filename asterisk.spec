@@ -86,7 +86,7 @@ BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
 BuildRequires:	mysql-devel
 BuildRequires:	libnbs-devel
-BuildRequires:	libneon0.27-devel
+BuildRequires:	neon-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpopt-devel
 BuildRequires:	libpri-devel >= 1.4.12
