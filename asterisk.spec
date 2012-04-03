@@ -1,3 +1,6 @@
+%define _build_pkgcheck_set %{nil}
+%define _build_pkgcheck_srpm %{nil}
+
 %define _requires_exceptions perl(Carp::Heavy)
 %define _disable_ld_no_undefined 1
 
@@ -29,8 +32,8 @@
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	1.8.7.1
-Release:	%mkrel %{?beta:0.0.%{beta}.}5
+Version:	1.8.11.0
+Release:	%mkrel %{?beta:0.0.%{beta}.}1
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -48,13 +51,14 @@ Patch52:	asterisk-1.6.1-beta3-ffmpeg_fix.diff
 Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 Patch58:	asterisk-neon-include-fix.patch
+Patch59:	asterisk-1.8.11.0-osptoolkit-4.x.diff
 Requires(pre):	rpm-helper
 Requires(postun):	rpm-helper
 Requires(post):	rpm-helper
 Requires(preun):	rpm-helper
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
-BuildRequires:	%{_lib}alsa-devel
+BuildRequires:	libalsa-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
 BuildRequires:	bison
@@ -80,7 +84,7 @@ BuildRequires:	libical-devel
 BuildRequires:	libidn-devel
 BuildRequires:	libiksemel-devel
 BuildRequires:	libilbc-devel
-BuildRequires:	%{_lib}mysql-devel
+BuildRequires:	mysql-devel
 BuildRequires:	libnbs-devel
 BuildRequires:	libneon0.27-devel
 BuildRequires:	libogg-devel
@@ -90,11 +94,11 @@ BuildRequires:	libss7-devel >= 1.0.2
 BuildRequires:	libtool
 BuildRequires:	libtool-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	%{_lib}xml2-devel
+BuildRequires:	libxml2-devel
 BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
 BuildRequires:	lpc10-devel
-BuildRequires:	%{_lib}lua-devel
+BuildRequires:	lua-devel
 %if %{build_misdn}
 BuildRequires:	isdn4k-utils-devel
 BuildRequires:	isdn4net
@@ -108,7 +112,7 @@ BuildRequires:	openais-devel
 BuildRequires:	openldap-devel
 BuildRequires:	openssl-devel
 BuildRequires:	openr2-devel
-BuildRequires:	osptk-devel >= 3.6.0
+BuildRequires:	osptk-devel >= 4.0.0
 BuildRequires:	pam-devel
 BuildRequires:	perl-devel
 BuildRequires:	portaudio-devel >= 19
@@ -119,14 +123,14 @@ BuildRequires:	SDL_image-devel
 BuildRequires:	spandsp-devel
 BuildRequires:	speex-devel
 BuildRequires:	sqlite3-devel
-BuildRequires:	srtp
+BuildRequires:	srtp-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	termcap-devel
 BuildRequires:	tiff-devel
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
 %endif
-BuildRequires:	%{_lib}usb-compat0.1-devel
+BuildRequires:	usb-compat-devel
 BuildRequires:	wget
 BuildRequires:	zlib-devel
 %if %mdkversion < 200900
@@ -139,7 +143,7 @@ BuildRequires:	ooh323c-devel
 BuildRequires:	openh323-devel >= 1.15.3
 BuildRequires:	pwlib-devel
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Asterisk is a complete PBX in software. It runs on Linux and provides
@@ -546,6 +550,7 @@ done
 %patch53 -p0 -b .libplc10
 %patch57 -p0 -b .editline
 %patch58 -p0 -b .neon
+%patch59 -p0 -b .osptoolkit-4.x
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -1078,7 +1083,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_stun_monitor.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_pthread.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_timerfd.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/test_linkedlists.so
 %attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
 %attr(0755,root,root) %{_sbindir}/asterisk
