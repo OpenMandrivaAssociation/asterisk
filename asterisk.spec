@@ -76,7 +76,7 @@ BuildRequires:	krb5-devel
 BuildRequires:	libcap-devel
 BuildRequires:	libedit-devel
 BuildRequires:	libgcrypt-devel
-BuildRequires:	libgnutls-devel
+BuildRequires:	gnutls-devel
 BuildRequires:	libgpg-error-devel
 BuildRequires:	libgsm-devel
 BuildRequires:	%mklibname hoard
