@@ -310,7 +310,7 @@ MiniVM application for Asterisk.
 %package	plugins-mobile
 Summary:	Asterisk channel driver for bluetooth phones and headsets
 Group:		System/Servers
-BuildRequires:	libbluez-devel
+BuildRequires:	bluez-devel
 Requires:	%{_lib}bluez3
 Requires:	asterisk = %{version}-%{release}
 
