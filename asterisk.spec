@@ -32,7 +32,7 @@
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	1.8.11.0
+Version:	10.6.1
 Release:	%mkrel %{?beta:0.0.%{beta}.}1
 License:	GPLv2
 Group:		System/Servers
@@ -52,10 +52,6 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 Patch58:	asterisk-neon-include-fix.patch
 Patch59:	asterisk-1.8.11.0-osptoolkit-4.x.diff
-Requires(pre):	rpm-helper
-Requires(postun):	rpm-helper
-Requires(post):	rpm-helper
-Requires(preun):	rpm-helper
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
 BuildRequires:	libalsa-devel
@@ -143,7 +139,7 @@ BuildRequires:	ooh323c-devel
 BuildRequires:	openh323-devel >= 1.15.3
 BuildRequires:	pwlib-devel
 %endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Obsoletes:	asterisk-plugins-usbradio
 
 %description
 Asterisk is a complete PBX in software. It runs on Linux and provides
@@ -364,14 +360,6 @@ Requires:	asterisk = %{version}-%{release}
 
 %description	plugins-oss
 Modules for Asterisk that use OSS sound drivers.
-
-%package	plugins-usbradio
-Summary:	USB radio channel for Asterisk
-Group:		System/Servers
-Requires:	asterisk = %{version}-%{release}
-
-%description	plugins-usbradio
-USB radio channel for Asterisk.
 %endif
 
 %package	plugins-pktccops
@@ -602,12 +590,12 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %configure \
 	--localstatedir=/var \
 	--with-asound=%{_prefix} \
-	--with-avcodec=%{_prefix} \
+	--with-bluetooth=%{_prefix} \
 	--with-cap=%{_prefix} \
 	--with-curses=%{_prefix} \
 	--with-crypto=%{_prefix} \
 	--with-dahdi=%{_prefix} \
-	--with-execinfo=%{_prefix} \
+	--with-avcodec=%{_prefix} \
 	--with-gsm=%{_prefix} \
 	--without-gtk2 \
 	--with-gmime=%{_prefix} \
@@ -625,6 +613,7 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-jack=%{_prefix} \
 	--without-kqueue \
 	--with-ldap=%{_prefix} \
+	--with-libcurl=%{_prefix} \
 	--with-ltdl=%{_prefix} \
 	--with-lua=%{_prefix} \
 %if %{build_misdn}
@@ -667,13 +656,14 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %endif
 	--with-sdl=%{_prefix} \
 	--with-SDL_image=%{_prefix} \
+	--with-sounds-cache=%{_prefix} \
 	--with-spandsp=%{_prefix} \
+	--with-ss7=%{_prefix} \
 	--with-speex=%{_prefix} \
 	--with-speexdsp=%{_prefix} \
 	--without-sqlite \
 	--with-sqlite3=%{_prefix} \
 	--with-srtp=%{_prefix} \
-	--with-ss7=%{_prefix} \
 	--with-ssl=%{_prefix} \
 	--with-tds=%{_prefix} \
 	--with-termcap=%{_prefix} \
@@ -685,7 +675,6 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 %else
 	--without-unixodbc \
 %endif
-	--with-usb=%{_prefix} \
 	--with-vorbis=%{_prefix} \
 	--without-vpb \
 	--without-x11 \
@@ -869,6 +858,7 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cli_aliases.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/cli_permissions.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/codecs.conf
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/confbridge.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/dnsmgr.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/dsp.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/dundi.conf
@@ -893,7 +883,6 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/phoneprov.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/queuerules.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/queues.conf
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/rpt.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/rtp.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_stun_monitor.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/say.conf
@@ -947,7 +936,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_readfile.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_read.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_record.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/app_rpt.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_saycounted.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_sayunixtime.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/app_senddtmf.so
@@ -1010,7 +998,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_pcm.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_siren14.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_siren7.so
-%attr(0755,root,root) %{_libdir}/asterisk/modules/format_sln16.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_sln.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_wav_gsm.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/format_wav.so
@@ -1036,6 +1023,7 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_global.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_groupcount.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_iconv.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/func_jitterbuffer.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_lock.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_logic.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/func_math.so
@@ -1067,6 +1055,8 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_clioriginate.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_convert.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_crypto.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/res_format_attr_celt.so
+%attr(0755,root,root) %{_libdir}/asterisk/modules/res_format_attr_silk.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_http_post.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_limit.so
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_monitor.so
@@ -1085,6 +1075,8 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_libdir}/asterisk/modules/res_timing_timerfd.so
 %attr(0755,root,root) %{_sbindir}/aelparse
 %attr(0755,root,root) %{_sbindir}/astcanary
+%attr(0755,root,root) %{_sbindir}/astdb2bdb
+%attr(0755,root,root) %{_sbindir}/astdb2sqlite3
 %attr(0755,root,root) %{_sbindir}/asterisk
 %attr(0755,root,root) %{_sbindir}/astgenkey
 %attr(0755,root,root) %{_sbindir}/astman
@@ -1291,11 +1283,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/oss.conf
 %attr(0755,root,root) %{_libdir}/asterisk/modules/chan_oss.so
-
-%files plugins-usbradio
-%defattr(-,root,root,-)
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/usbradio.conf
-%attr(0755,root,root) %{_libdir}/asterisk/modules/chan_usbradio.so
 %endif
 
 %files plugins-osp
