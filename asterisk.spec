@@ -32,7 +32,7 @@
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	10.6.1
+Version:	10.7.1
 Release:	%mkrel %{?beta:0.0.%{beta}.}1
 License:	GPLv2
 Group:		System/Servers
