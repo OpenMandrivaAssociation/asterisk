@@ -1,0 +1,9 @@
+--- main/editline/Makefile.in.orig	2009-02-24 10:23:52.000000000 +0100
++++ main/editline/Makefile.in	2009-02-24 10:23:42.000000000 +0100
+@@ -16,5 +16,5 @@
+ AR = @AR@
+ RANLIB = @RANLIB@
+-CPPFLAGS = @CPPFLAGS@ -I.
++CPPFLAGS = @CPPFLAGS@ -I. -I../../include
+ CFLAGS = @CFLAGS@
+ A_CFLAGS = @A_CFLAGS@

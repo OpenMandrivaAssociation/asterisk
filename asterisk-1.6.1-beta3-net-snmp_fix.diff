@@ -1,0 +1,11 @@
+--- configure.ac	2008-12-11 16:47:27.000000000 +0100
++++ configure.ac.oden	2008-12-11 17:05:02.000000000 +0100
+@@ -1689,7 +1689,7 @@
+ #error Need libneon >= 0.29.0
+ #endif])
+ 
+-AST_EXT_TOOL_CHECK([NETSNMP], [net-snmp-config], , [--agent-libs],
++AST_EXT_TOOL_CHECK([NETSNMP], [net-snmp-config], , [--base-agent-libs],
+ [#include <net-snmp/net-snmp-config.h>
+ #include <net-snmp/net-snmp-includes.h>
+ #include <net-snmp/agent/net-snmp-agent-includes.h>],

@@ -1,0 +1,27 @@
+diff -Naur asterisk-1.6.1-beta3/channels/console_video.h asterisk-1.6.1-beta3.oden/channels/console_video.h
+--- asterisk-1.6.1-beta3/channels/console_video.h	2008-06-30 17:45:15.000000000 +0200
++++ asterisk-1.6.1-beta3.oden/channels/console_video.h	2008-12-11 17:43:35.000000000 +0100
+@@ -28,9 +28,9 @@
+ 		"console {device}"
+ #else
+ 
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ #ifndef OLD_FFMPEG
+-#include <ffmpeg/swscale.h>     /* requires a recent ffmpeg */
++#include <libswscale/swscale.h>     /* requires a recent ffmpeg */
+ #endif
+ 
+ #define CONSOLE_VIDEO_CMDS			\
+diff -Naur asterisk-1.6.1-beta3/configure.ac asterisk-1.6.1-beta3.oden/configure.ac
+--- asterisk-1.6.1-beta3/configure.ac	2008-12-01 22:46:26.000000000 +0100
++++ asterisk-1.6.1-beta3.oden/configure.ac	2008-12-11 17:41:36.000000000 +0100
+@@ -2089,7 +2089,7 @@
+ 
+ AST_EXT_TOOL_CHECK([SDL], [sdl-config])
+ AST_EXT_LIB_CHECK([SDL_IMAGE], [SDL_image], [IMG_Load], [SDL_image.h], [${SDL_LIB}], [${SDL_INCLUDE}])
+-AST_EXT_LIB_CHECK([FFMPEG], [avcodec], [sws_getContext], [ffmpeg/avcodec.h], [${PTHREAD_LIBS} -lz -lm], [${PTHREAD_CFLAGS}])
++AST_EXT_LIB_CHECK([FFMPEG], [avcodec], [sws_getContext], [libavcodec/avcodec.h], [-lswscale ${PTHREAD_LIBS} -lz -lm], [${PTHREAD_CFLAGS}])
+ 
+ # possible places for video4linux version 1
+ AC_CHECK_HEADER([linux/videodev.h],

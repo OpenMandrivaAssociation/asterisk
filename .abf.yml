@@ -1,0 +1,7 @@
+sources:
+  "asterisk-10.7.1.tar.gz:"	f5d62f2a035982869c4dd8c1ed9e3e211db0f0cd
+  "asterisk-logrotate:"	6c63177faf189bc02f660e63b4cad3f79a9cceb5
+  "asterisk-mp3.tar.bz2:"	e7d9a2725d7462edfdc818a918e00157dad2a213
+  "g72x_install:"	25b9ac83cd7744d4ce2d74c681960e32c565c75f
+  "menuselect.makedeps:"	244d98ea28532c23a0241eaad481482c5440af11
+  "menuselect.makeopts:"	fbb551657709577730f52fe09ad9af99181332cd
