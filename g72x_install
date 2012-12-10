@@ -1,0 +1,57 @@
+#!/bin/bash
+# This script install the Open SOurce G723.1 and G729 codec 
+# to the Asterisk.
+# Please run in console:
+# sh /usr/share/doc/asterisk/g72x_install
+# and the modules should be update all asterisk update. :-)
+#
+
+[[ -e `which wget` ]] && WGET=`which wget` || exit 1
+[[ -d /usr/lib/asterisk/modules ]] && LIBNAME="lib"
+[[ -d /usr/lib64/asterisk/modules ]] && LIBNAME="lib64"
+
+AST_VERSION=18
+asteriskhostinglv="http://asterisk.hosting.lv/bin"
+
+MD5SUM_FILE="MD5SUM"
+if [ -d /usr/lib/asterisk/modules ] ; then
+	G273_FILE="codec_g723-ast${AST_VERSION}-gcc4-glibc-pentium2.so"
+	G279_FILE="codec_g729-ast${AST_VERSION}-gcc4-glibc-pentium2.so"
+else
+	G273_FILE="codec_g723-ast${AST_VERSION}-gcc4-glibc-x86_64-pentium4.so"
+	G279_FILE="codec_g729-ast${AST_VERSION}-gcc4-glibc-x86_64-pentium4.so"
+fi
+ASTCONV_FILE="astconv"
+G729_ENC_FILE="g729_my_enc.bin"
+G729_DEC_FILE="g729_my_dec.bin"
+README_FILE="README.txt"
+
+rm -rf $TMP/g72x && mkdir -p $TMP/g72x && pushd $TMP/g72x
+
+  $WGET -q $steriskhostinglv/MD5SUM
+  for I in astconv g729_my_enc.bin g729_my_dec.bin ; do
+    $WGET -q http://asterisk.hosting.lv/bin/$I
+    [[ "`md5sum $I`" == "`grep $I $MD5SUM_FILE`" ]] || echo Error: $I
+  done
+  rm -f MD5SUM
+
+  $WGET -q $steriskhostinglv/$MD5SUM_FILE
+  $WGET -q http://asterisk.hosting.lv/src/README.txt
+  for I in $G273_FILE $G279_FILE ; do
+    $WGET -q $steriskhostinglv/$I
+    [[ "`md5sum $I`" == "`grep $I $MD5SUM_FILE`" ]] || echo Error: $I
+  done
+
+  mv README.txt /usr/share/doc/asterisk/README.g72x.txt
+  chmod +x *
+  mv $G273_FILE /usr/$LIBNAME/asterisk/modules/codec_g723.so
+  mv $G279_FILE /usr/$LIBNAME/asterisk/modules/codec_g729.so
+  mv g729_my_enc.bin /usr/bin/g729_my_enc
+  mv g729_my_dec.bin /usr/bin/g729_my_dec
+  mv astconv /usr/bin/astconv
+
+popd
+
+rm -rf $TMP/g72x
+echo The G723/G729 codecs is installed on your Asterisk.
+

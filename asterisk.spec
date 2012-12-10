@@ -28,12 +28,16 @@
 %{?_without_tds:	%global build_tds 0}
 %{?_with_tds:		%global build_tds 1}
 
+%define build_corosync	1
+%{?_without_corosync:	%global build_corosync 0}
+%{?_with_corosync:		%global build_corosync 1}
+
 #define beta rc3
 
 Summary:	The Open Source PBX
 Name:		asterisk
-Version:	10.7.1
-Release:	%mkrel %{?beta:0.0.%{beta}.}1
+Version:	10.9.0
+Release:	%mkrel %{?beta:0.0.%{beta}.}2
 License:	GPLv2
 Group:		System/Servers
 URL:		http://www.asterisk.org/
@@ -43,7 +47,8 @@ Source2:	menuselect.makedeps
 Source3:	menuselect.makeopts
 Source4:	g72x_install
 Source5:	asterisk-mp3.tar.bz2
-
+Source6:	asterisk.service
+Source7:	asterisk-tmpfiles
 Patch2:		0002-Modify-modules.conf-so-that-different-voicemail-modu.patch
 Patch50:	asterisk-1.6.1-rc1-utils_pthread_fix.diff
 Patch51:	asterisk-1.6.1-beta3-net-snmp_fix.diff
@@ -52,94 +57,93 @@ Patch53:	asterisk-external_liblpc10_and_libilbc.diff
 Patch57:	editline-include-missing-1.6.1-fix.diff
 Patch58:	asterisk-neon-include-fix.patch
 Patch59:	asterisk-1.8.11.0-osptoolkit-4.x.diff
+Patch60:	asterisk-10.7.1-res_corosync.diff
+Patch61:	asterisk-10.8.0-lua52.diff
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
-BuildRequires:	libalsa-devel
+BuildRequires:	alsa-oss-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
 BuildRequires:	bison
 BuildRequires:	bluez-devel
-BuildRequires:	curl-devel
+BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	dahdi-devel >= 2.0.0
 BuildRequires:	ffmpeg-devel
 BuildRequires:	flex
 BuildRequires:	freetds-devel >= 0.64
-BuildRequires:	libgmime2.2-devel
-BuildRequires:	gmime2.2-utils
+BuildRequires:	gmime-devel
 BuildRequires:	gsm-devel
-BuildRequires:	jackit-devel
+BuildRequires:	pkgconfig(jack)
 BuildRequires:	krb5-devel
 BuildRequires:	libcap-devel
-BuildRequires:	libedit-devel
+BuildRequires:	pkgconfig(libedit)
 BuildRequires:	libgcrypt-devel
-BuildRequires:	gnutls-devel
+BuildRequires:	pkgconfig(gnutls)
 BuildRequires:	libgpg-error-devel
 BuildRequires:	libgsm-devel
-BuildRequires:	%mklibname hoard
-BuildRequires:	libical-devel
+BuildRequires:	hoard-devel
+BuildRequires:	pkgconfig(libical)
 BuildRequires:	libidn-devel
-BuildRequires:	libiksemel-devel
+BuildRequires:	pkgconfig(iksemel)
 BuildRequires:	libilbc-devel
 BuildRequires:	mysql-devel
 BuildRequires:	libnbs-devel
-BuildRequires:	neon-devel
-BuildRequires:	libogg-devel
-BuildRequires:	popt-devel
+BuildRequires:	pkgconfig(neon)
+BuildRequires:	pkgconfig(ogg)
+BuildRequires:	pkgconfig(popt)
 BuildRequires:	libpri-devel >= 1.4.12
 BuildRequires:	libss7-devel >= 1.0.2
 BuildRequires:	libtool
 BuildRequires:	libtool-devel
-BuildRequires:	libvorbis-devel
-BuildRequires:	libxml2-devel
+BuildRequires:	pkgconfig(vorbis)
+BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	libzap-devel >= 1.0.1
 BuildRequires:	lm_sensors-devel
 BuildRequires:	lpc10-devel
-BuildRequires:	lua-devel
+BuildRequires:	pkgconfig(lua)
 %if %{build_misdn}
 BuildRequires:	isdn4k-utils-devel
 BuildRequires:	isdn4net
 BuildRequires:	misdn2-devel
 %endif
-BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	net-snmp-devel
-BuildRequires:	newt-devel
+BuildRequires:	pkgconfig(libnewt)
 BuildRequires:	oggvorbis-devel
-BuildRequires:	openais-devel
+%if %{build_corosync}
+BuildRequires:	corosync-devel
+%endif
 BuildRequires:	openldap-devel
-BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig(openssl)
 BuildRequires:	openr2-devel
-BuildRequires:	osptk-devel >= 4.0.0
+BuildRequires:	pkgconfig(opus)
+BuildRequires:	pkgconfig(libosptk) >= 4.0.0
 BuildRequires:	pam-devel
 BuildRequires:	perl-devel
 BuildRequires:	portaudio-devel >= 19
 BuildRequires:	postgresql-devel
 BuildRequires:	radiusclient-ng-devel
 BuildRequires:	resample-devel
-BuildRequires:	SDL_image-devel
-BuildRequires:	spandsp-devel
-BuildRequires:	speex-devel
-BuildRequires:	sqlite3-devel
+BuildRequires:	pkgconfig(SDL_image)
+BuildRequires:	pkgconfig(spandsp)
+BuildRequires:	pkgconfig(speex)
+BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	srtp-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	termcap-devel
-BuildRequires:	tiff-devel
+BuildRequires:	pkgconfig(libtiff-4)
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
 %endif
 BuildRequires:	usb-compat-devel
 BuildRequires:	wget
-BuildRequires:	zlib-devel
-%if %mdkversion < 200900
-BuildRequires:	imap-devel
-%else
+BuildRequires:	pkgconfig(zlib)
 BuildRequires:	c-client-devel
-%endif
 %if %{build_h323}
 BuildRequires:	ooh323c-devel
 BuildRequires:	openh323-devel >= 1.15.3
 BuildRequires:	pwlib-devel
 %endif
-Obsoletes:	asterisk-plugins-usbradio
 
 %description
 Asterisk is a complete PBX in software. It runs on Linux and provides
@@ -177,13 +181,16 @@ Group:		Development/C
 This package contains the development header files that are needed
 to compile 3rd party modules.
 
-%package	plugins-ais
-Summary:	Modules for Asterisk that use OpenAIS
+%if %{build_corosync}
+%package	plugins-corosync
+Summary:	Modules for Asterisk that use corosync
 Group:		System/Servers
 Requires:	asterisk = %{version}-%{release}
+Obsoletes:	asterisk-plugins-ais
 
-%description	plugins-ais
-Modules for Asterisk that use OpenAIS.
+%description	plugins-corosync
+Modules for Asterisk that use corosync.
+%endif
 
 %package	plugins-alsa
 Summary:	Modules for Asterisk that use Alsa sound drivers
@@ -539,6 +546,8 @@ done
 %patch57 -p0 -b .editline
 %patch58 -p0 -b .neon
 %patch59 -p0 -b .osptoolkit-4.x
+%patch60 -p1
+%patch61 -p0
 
 cp %{SOURCE2} menuselect.makedeps
 cp %{SOURCE3} menuselect.makeopts
@@ -565,9 +574,9 @@ perl -pi -e "s|/lib/|/%{_lib}/|g" configure*  autoconf/*.m4
 
 # if we are building for i386 promote the CPU arch to i486 for atomic operations support
 %ifarch i386
-%define optflags %{__global_cflags} -m32 -march=i486 -mtune=generic -fasynchronous-unwind-tables -Werror-implicit-function-declaration
+%define optflags %{__global_cflags} -m32 -march=i486 -mtune=generic -fasynchronous-unwind-tables
 %else
-%define optflags %(rpm --eval %%{optflags}) -Werror-implicit-function-declaration
+%define optflags %(rpm --eval %%{optflags})
 %endif
 
 ./bootstrap.sh
@@ -586,7 +595,6 @@ pushd main/editline
 %configure2_5x
 popd
 
-export CFLAGS="%{optflags} `gmime-config --cflags`"
 %configure \
 	--localstatedir=/var \
 	--with-asound=%{_prefix} \
@@ -633,7 +641,11 @@ export CFLAGS="%{optflags} `gmime-config --cflags`"
 	--with-netsnmp=%{_prefix} \
 	--with-newt=%{_prefix} \
 	--with-ogg=%{_prefix} \
-	--with-openais=%{_prefix} \
+%if %{build_corosync}
+	--with-cpg=%{_prefix} \
+%else
+	--without-cpg \
+%endif
 	--with-openr2=%{_prefix} \
 	--with-osptk=%{_prefix} \
 %if %{build_oss}
@@ -685,9 +697,8 @@ sed 's#localstatedir}/lib64#localstatedir}/lib#g' -i makeopts
 sed -e 's/,--no-undefined -Wl//g' -i makeopts
 
 # fix some weirdos
-GMIME_INCLUDE=`gmime-config --cflags`
-perl -pi -e "s|^AIS_INCLUDE=.*|AIS_INCLUDE=-I/usr/include/openais|g" makeopts
-perl -pi -e "s|^GMIME_INCLUDE=.*|GMIME_INCLUDE=$GMIME_INCLUDE|g" makeopts
+#GMIME_INCLUDE=`pkg-config --cflags gmime-2.6`
+#perl -pi -e "s|^GMIME_INCLUDE=.*|GMIME_INCLUDE=$GMIME_INCLUDE|g" makeopts
 
 %{__sed} -i -e 's/^MENUSELECT_OPTS_app_voicemail=.*$/MENUSELECT_OPTS_app_voicemail=FILE_STORAGE/' menuselect.makeopts
 ASTCFLAGS="%{optflags}" make DEBUG= OPTIMIZE= ASTVARRUNDIR=/var/run/asterisk NOISY_BUILD=1
@@ -722,11 +733,13 @@ rm -rf %{buildroot}
 ASTCFLAGS="%{optflags}" make install DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
 ASTCFLAGS="%{optflags}" make samples DEBUG= OPTIMIZE= DESTDIR=%{buildroot} ASTVARRUNDIR=/var/run/asterisk
 
-install -D -p -m 0755 contrib/init.d/rc.redhat.asterisk %{buildroot}%{_initrddir}/asterisk
 install -D -p -m 0644 %{S:1} %{buildroot}%{_sysconfdir}/logrotate.d/asterisk
+install -D -p -m 0644 %{SOURCE6} %{buildroot}/lib/systemd/system/asterisk.service
+rm -f %{buildroot}%{_sbindir}/safe_asterisk
+install -D -p -m 0644 %{SOURCE7} %{buildroot}%{_sysconfdir}/tmpfiles.d/asterisk.conf
 
-install -D -p -m 0644 contrib/editors/ael.vim %{buildroot}%{_datadir}/vim/syntax/ael.vim
-install -D -p -m 0644 contrib/editors/asteriskvm.vim %{buildroot}%{_datadir}/vim/syntax/asteriskvm.vim
+#install -D -p -m 0644 contrib/editors/ael.vim %{buildroot}%{_datadir}/vim/syntax/ael.vim
+#install -D -p -m 0644 contrib/editors/asteriskvm.vim %{buildroot}%{_datadir}/vim/syntax/asteriskvm.vim
 
 rm %{buildroot}%{_libdir}/asterisk/modules/app_directory.so
 rm %{buildroot}%{_libdir}/asterisk/modules/app_voicemail.so
@@ -799,13 +812,16 @@ gpasswd -a asterisk dialout 1>/dev/null
 echo "Adding setuid root to /usr/bin/mpg123, needed for MOH"
 chmod u+s %{_bindir}/mpg123
 [[ -e %{_libdir}/asterisk/modules/codec_g729.so ]] && sh %{_docdir}/g72x_install
-%_post_service asterisk
+if [ $1 -eq 1 ] ; then
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
 
 %preun
 if [ "$1" = 0 ]; then
 	echo "Removing setuid root from /usr/bin/mpg123"
 	chmod u-s %{_bindir}/mpg123
 fi
+
 # Remove the G72x stuff
 rm -f /usr/share/doc/asterisk/README.g72x.txt
 rm -f /usr/$LIBNAME/asterisk/modules/codec_g723.so
@@ -814,11 +830,21 @@ rm -f /usr/bin/g729_my_enc
 rm -f /usr/bin/g729_my_dec
 rm -f /usr/bin/astconv
 
-%_preun_service asterisk
+if [ "$1" -eq "0" ]; then
+	# Package removal, not upgrade
+	/bin/systemctl --no-reload disable asterisk.service > /dev/null 2>&1 || :
+	/bin/systemctl stop asterisk.service > /dev/null 2>&1 || :
+fi
 
 %postun
 %_postun_userdel asterisk
 gpasswd -d asterisk dialout 1>/dev/null
+
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart asterisk.service >/dev/null 2>&1 || :
+fi
 
 %pre plugins-dahdi
 %{_sbindir}/usermod -a -G dahdi asterisk
@@ -841,7 +867,8 @@ rm -rf %{buildroot}
 %doc README* *.txt ChangeLog BUGS CREDITS configs
 %doc doc/asterisk.sgml g72x_install
 %doc contrib/realtime/mysql
-%{_initrddir}/asterisk
+/lib/systemd/system/asterisk.service
+%attr(0644,root,root) %{_sysconfdir}/tmpfiles.d/asterisk.conf
 %attr(0750,asterisk,asterisk) %dir %{_sysconfdir}/asterisk
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/adsi.conf
 %attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/agents.conf
@@ -1087,7 +1114,6 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_sbindir}/muted
 %attr(0755,root,root) %{_sbindir}/rasterisk
 %attr(0755,root,root) %{_sbindir}/refcounter
-%attr(0755,root,root) %{_sbindir}/safe_asterisk
 %attr(0755,root,root) %{_sbindir}/smsq
 %attr(0755,root,root) %{_sbindir}/stereorize
 %attr(0755,root,root) %{_sbindir}/streamplayer
@@ -1110,7 +1136,7 @@ rm -rf %{buildroot}
 %attr(0770,asterisk,asterisk) %dir /var/spool/asterisk/outgoing
 %attr(0750,asterisk,asterisk) %dir /var/spool/asterisk/tmp
 %attr(0750,asterisk,asterisk) %dir /var/spool/asterisk/voicemail
-%attr(0755,asterisk,asterisk) %dir /var/run/asterisk
+%ghost %attr(0755,asterisk,asterisk) %dir /var/run/asterisk
 %attr(0640,asterisk,asterisk) %ghost /var/lib/asterisk/astdb
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/cdr-csv/Master.csv
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/console
@@ -1119,8 +1145,8 @@ rm -rf %{buildroot}
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/h323_log
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/messages
 %attr(0640,asterisk,asterisk) %ghost /var/log/asterisk/queue_log
-%attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/ael.vim
-%attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/asteriskvm.vim
+#%attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/ael.vim
+#%attr(0640,asterisk,asterisk) %{_datadir}/vim/syntax/asteriskvm.vim
 
 %files devel -f %{name}-devel.filelist
 %defattr(-,root,root,-)
@@ -1136,10 +1162,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %attr(0750,asterisk,asterisk) /var/lib/asterisk/firmware
 
-%files plugins-ais
+%if %{build_corosync}
+%files plugins-corosync
 %defattr(-,root,root,-)
-%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/ais.conf
-%attr(0755,root,root) %{_libdir}/asterisk/modules/res_ais.so
+%attr(0640,asterisk,asterisk) %config(noreplace) %{_sysconfdir}/asterisk/res_corosync.conf
+%attr(0755,root,root) %{_libdir}/asterisk/modules/res_corosync.so
+%endif
 
 %files plugins-alsa
 %defattr(-,root,root,-)
