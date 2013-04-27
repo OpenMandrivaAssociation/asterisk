@@ -130,7 +130,6 @@ BuildRequires:	pkgconfig(speex)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	srtp-devel
 BuildRequires:	tcp_wrappers-devel
-BuildRequires:	termcap-devel
 BuildRequires:	pkgconfig(libtiff-4)
 %if %{build_odbc}
 BuildRequires:	unixODBC-devel
