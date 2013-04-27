@@ -677,7 +677,6 @@ popd
 	--with-srtp=%{_prefix} \
 	--with-ssl=%{_prefix} \
 	--with-tds=%{_prefix} \
-	--with-termcap=%{_prefix} \
 	--with-timerfd=%{_prefix} \
 	--without-tinfo \
 	--with-tonezone=%{_prefix} \
