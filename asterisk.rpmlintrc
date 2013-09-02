@@ -1,1 +1,2 @@
 addFilter("E: non-readable")
+addFilter("E: external-depfilter-with-internal-depgen")
