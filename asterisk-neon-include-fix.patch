@@ -1,7 +1,7 @@
-diff -ur configure.ac asterisk-1.8.1.1/configure.ac
---- configure.ac.neon	2010-12-17 12:04:52.000000000 +0100
-+++ configure.ac	2010-12-17 12:05:05.000000000 +0100
-@@ -1687,7 +1687,7 @@
+diff -Naurp asterisk-11.5.0/configure.ac asterisk-11.5.0.oden/configure.ac
+--- asterisk-11.5.0/configure.ac	2013-08-06 14:52:53.388690216 +0200
++++ asterisk-11.5.0.oden/configure.ac	2013-08-06 14:52:29.890518007 +0200
+@@ -1908,7 +1908,7 @@ AST_EXT_LIB_CHECK([NBS], [nbs], [nbs_con
  AST_EXT_TOOL_CHECK([NEON], [neon-config])
  
  AST_EXT_TOOL_CHECK([NEON29], [neon-config], , [--libs],
@@ -10,10 +10,11 @@ diff -ur configure.ac asterisk-1.8.1.1/configure.ac
  [#ifndef NE_AUTH_NTLM
  #error Need libneon >= 0.29.0
  #endif])
---- res/res_calendar_caldav.c.neon	2011-07-14 22:13:06.000000000 +0200
-+++ res/res_calendar_caldav.c	2011-09-04 11:24:24.283801326 +0200
+diff -Naurp asterisk-11.5.0/res/res_calendar_caldav.c asterisk-11.5.0.oden/res/res_calendar_caldav.c
+--- asterisk-11.5.0/res/res_calendar_caldav.c	2012-05-18 16:43:44.000000000 +0200
++++ asterisk-11.5.0.oden/res/res_calendar_caldav.c	2013-08-06 14:52:29.890518007 +0200
 @@ -32,11 +32,11 @@
- ASTERISK_FILE_VERSION(__FILE__, "$Revision: 366881 $")
+ ASTERISK_FILE_VERSION(__FILE__, "$Revision: 366917 $")
  
  #include <libical/ical.h>
 -#include <ne_session.h>
@@ -29,11 +30,12 @@ diff -ur configure.ac asterisk-1.8.1.1/configure.ac
  #include <libxml/xmlmemory.h>
  #include <libxml/parser.h>
  
---- res/res_calendar_ews.c.neon	2011-07-14 22:13:06.000000000 +0200
-+++ res/res_calendar_ews.c	2011-09-04 11:26:31.751491087 +0200
+diff -Naurp asterisk-11.5.0/res/res_calendar_ews.c asterisk-11.5.0.oden/res/res_calendar_ews.c
+--- asterisk-11.5.0/res/res_calendar_ews.c	2012-10-31 15:49:33.000000000 +0100
++++ asterisk-11.5.0.oden/res/res_calendar_ews.c	2013-08-06 14:52:29.891517977 +0200
 @@ -29,15 +29,15 @@
  
- ASTERISK_FILE_VERSION(__FILE__, "$Revision: 366741 $")
+ ASTERISK_FILE_VERSION(__FILE__, "$Revision: 375532 $")
  
 -#include <ne_request.h>
 -#include <ne_session.h>
@@ -56,10 +58,11 @@ diff -ur configure.ac asterisk-1.8.1.1/configure.ac
  
  #include "asterisk/module.h"
  #include "asterisk/calendar.h"
---- res/res_calendar_exchange.c.neon	2011-07-14 22:13:06.000000000 +0200
-+++ res/res_calendar_exchange.c	2011-09-04 11:27:40.311552611 +0200
+diff -Naurp asterisk-11.5.0/res/res_calendar_exchange.c asterisk-11.5.0.oden/res/res_calendar_exchange.c
+--- asterisk-11.5.0/res/res_calendar_exchange.c	2012-05-18 16:43:44.000000000 +0200
++++ asterisk-11.5.0.oden/res/res_calendar_exchange.c	2013-08-06 14:52:29.891517977 +0200
 @@ -32,11 +32,11 @@
- ASTERISK_FILE_VERSION(__FILE__, "$Revision: 366881 $")
+ ASTERISK_FILE_VERSION(__FILE__, "$Revision: 366917 $")
  
  #include <libical/ical.h>
 -#include <ne_session.h>
@@ -75,10 +78,11 @@ diff -ur configure.ac asterisk-1.8.1.1/configure.ac
  #include <iksemel.h>
  
  #include "asterisk/module.h"
---- res/res_calendar_icalendar.c.neon	2011-07-14 22:13:06.000000000 +0200
-+++ res/res_calendar_icalendar.c	2011-09-04 11:28:32.447881286 +0200
+diff -Naurp asterisk-11.5.0/res/res_calendar_icalendar.c asterisk-11.5.0.oden/res/res_calendar_icalendar.c
+--- asterisk-11.5.0/res/res_calendar_icalendar.c	2013-01-30 15:15:27.000000000 +0100
++++ asterisk-11.5.0.oden/res/res_calendar_icalendar.c	2013-08-06 14:52:29.891517977 +0200
 @@ -31,11 +31,11 @@
- ASTERISK_FILE_VERSION(__FILE__, "$Revision: 366881 $")
+ ASTERISK_FILE_VERSION(__FILE__, "$Revision: 380452 $")
  
  #include <libical/ical.h>
 -#include <ne_session.h>

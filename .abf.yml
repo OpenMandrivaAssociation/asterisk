@@ -1,4 +1,7 @@
+removed_sources:
+  asterisk-10.8.0.tar.gz: ee98721415e419a0b559aaf6ca2d408ae11f425a
+  asterisk-10.9.0.tar.gz: 80cfb804067e557b95baf002cc91df618698a384
 sources:
-  "asterisk-mp3.tar.bz2": e7d9a2725d7462edfdc818a918e00157dad2a213
-  "asterisk-10.8.0.tar.gz": ee98721415e419a0b559aaf6ca2d408ae11f425a
-  "asterisk-10.9.0.tar.gz": 80cfb804067e557b95baf002cc91df618698a384
+  asterisk-11.5.1.tar.gz: fd2d568dbb6d75be17b141466ee3e276d4910e23
+  asterisk-gui.tar.gz: 973cb2920b17d39163d7f264b4f3d8ef32240b53
+  asterisk-mp3.tar.bz2: e7d9a2725d7462edfdc818a918e00157dad2a213

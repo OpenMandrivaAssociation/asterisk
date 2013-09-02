@@ -1,0 +1,11 @@
+--- configure.ac	2012-12-13 11:54:30.179980511 -0500
++++ configure.ac.oden	2012-12-13 12:18:16.059944779 -0500
+@@ -2064,7 +2064,7 @@
+ fi
+ 
+ # Some distributions (like SuSE) remove the 5.1 suffix.
+-AST_EXT_LIB_CHECK([LUA], [lua], [luaL_register], [lua.h], [-lm])
++AST_EXT_LIB_CHECK([LUA], [lua], [luaL_newstate], [lua.h], [-lm])
+ 
+ AST_EXT_LIB_CHECK([RADIUS], [radiusclient-ng], [rc_read_config], [radiusclient-ng.h])
+ 
