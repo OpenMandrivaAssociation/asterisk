@@ -577,7 +577,7 @@ chmod -x contrib/scripts/dbsep.cgi
 %ifarch i386
 %define optflags %{__global_cflags} -m32 -march=i486 -mtune=generic -fasynchronous-unwind-tables
 %else
-%define optflags %(rpm --eval %%{optflags})
+%define optflags %(rpm --target %{_target} --eval %%{optflags})
 %endif
 
 ./bootstrap.sh
