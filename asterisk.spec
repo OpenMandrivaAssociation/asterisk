@@ -20,7 +20,7 @@ Version:	11.5.1
 Release:	%mkrel %{?beta:0.0.%{beta}.}1
 License:	GPLv2
 Group:		System/Servers
-URL:		http://www.asterisk.org/
+URL:		https://www.asterisk.org/
 Source0:	http://downloads.asterisk.org/pub/telephony/asterisk/%{?!beta:releases/}%{name}-%{version}%{?beta:-%{beta}}.tar.gz
 Source1:	asterisk-logrotate
 Source2:	%{name}-%{version}-menuselect.makedeps
