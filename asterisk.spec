@@ -43,6 +43,8 @@ Patch59:	asterisk-11.1.0-lua_fix.diff
 Requires:	mpg123
 Requires:	asterisk-core-sounds, asterisk-moh
 Requires(post): systemd
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
 BuildRequires:	alsa-oss-devel
 BuildRequires:	autoconf >= 1:2.60
 BuildRequires:	automake1.9 >= 1.9.6
