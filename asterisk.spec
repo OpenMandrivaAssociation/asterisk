@@ -17,7 +17,7 @@
 Summary:	The Open Source PBX
 Name:		asterisk
 Version:	11.5.1
-Release:	%mkrel %{?beta:0.0.%{beta}.}1
+Release:	%{?beta:0.0.%{beta}.}1.1
 License:	GPLv2
 Group:		System/Servers
 URL:		https://www.asterisk.org/
